@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC
+        "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+    <schema-selection match-table="t_user" match-catalog="bos"/>
+    <schema-selection match-table="bc_standard" match-catalog="bos"/>
+    <schema-selection match-table="bc_region" match-catalog="bos"/>
+    <schema-selection match-table="bc_staff" match-catalog="bos"/>
+    <schema-selection match-table="bc_subarea" match-catalog="bos"/>
+    <schema-selection match-table="bc_decidedzone" match-catalog="bos"/>
+
+    <!--   <table name="goods" catalog="ssh_store" class="cn.itcast.ssh.storemanager.domain.Good"> -->
+    <!-- 		<primary-key> -->
+    <!-- 			<generator class="uuid"></generator> -->
+    <!-- 		</primary-key> -->
+    <!-- 	</table> -->
+    <table name="t_user" catalog="bos" class="com.heima.bos.domain.user.User"></table>
+    <table name="bc_standard" catalog="bos" class="com.heima.bos.domain.basic.Standard"></table>
+    <table name="bc_region" catalog="bos" class="com.heima.bos.domain.basic.Region">
+        <primary-key>
+            <generator class="uuid"></generator>
+        </primary-key>
+    </table>
+    <table name="bc_staff" catalog="bos" class="com.heima.bos.domain.basic.Staff">
+        <primary-key>
+            <generator class="uuid"></generator>
+        </primary-key>
+    </table>
+    <table name="bc_subarea" catalog="bos" class="com.heima.bos.domain.basic.Subarea">
+        <primary-key>
+            <generator class="uuid"></generator>
+        </primary-key>
+    </table>
+    <table name="bc_decidedzone" catalog="bos" class="com.heima.bos.domain.basic.Decidedzone">
+        <primary-key>
+            <generator class="uuid"></generator>
+        </primary-key>
+    </table>
+
+</hibernate-reverse-engineering>
