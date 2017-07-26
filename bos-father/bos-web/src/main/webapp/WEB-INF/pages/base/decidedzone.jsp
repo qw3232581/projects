@@ -44,9 +44,6 @@
 
             	$.post("${pageContext.request.contextPath}/decidedzoneAction_findNoAssociationCustomers"
 	            	,function(data){
-            		 if(JSON.stringify(data) == "{}"){
-            			return;
-            		} 
 	            		$(data).each(function(){
 							$("#noassociationSelect").append("<option value='"+this.id+"'>"+this.name+"</option>");            			
 	            		});
@@ -54,9 +51,6 @@
             	
             	$.post("${pageContext.request.contextPath}/decidedzoneAction_findAssociatedCustomers",{"id":arr[0].id}
                  	,function(data){
-                 		 if(JSON.stringify(data) == "{}"){
-                			return;
-                		} 
                  		$(data).each(function(){
                  			$("#associationSelect").append("<option value='"+this.id+"'>"+this.name+"</option>");            			
                  		});
@@ -215,15 +209,19 @@
         });
 
         function doDblClickRow() {
+        	
+        	var arr = $("#grid").datagrid("getSelections");
+            var d_id = arr[0].id;
+            
             $('#association_subarea').datagrid({
                 fit: true,
                 border: true,
                 rownumbers: true,
                 striped: true,
-                url: "json/association_subarea.json",
+                url: "${pageContext.request.contextPath}/decidedzoneAction_findAssociationSubarea?id="+d_id,
                 columns: [[{
                     field: 'id',
-                    title: '分拣编号',
+                    title: '分区编号',
                     width: 120,
                     align: 'center'
                 }, {
@@ -283,7 +281,7 @@
                 border: true,
                 rownumbers: true,
                 striped: true,
-                url: "json/association_customer.json",
+                url: "${pageContext.request.contextPath}/decidedzoneAction_findAssociationCustomer?id="+d_id,
                 columns: [[{
                     field: 'id',
                     title: '客户编号',
@@ -302,6 +300,7 @@
                 }]]
             });
         }
+        
     </script>
 </head>
 <body class="easyui-layout" style="visibility:hidden;">
@@ -310,14 +309,15 @@
 </div>
 <div region="south" border="false" style="height:150px">
     <div id="tabs" fit="true" class="easyui-tabs">
-        <div title="关联分区" id="subArea"
-             style="width:100%;height:100%;overflow:hidden">
+    
+        <div title="关联分区" id="subArea" style="width:100%;height:100%;overflow:hidden">
             <table id="association_subarea"></table>
         </div>
-        <div title="关联客户" id="customers"
-             style="width:100%;height:100%;overflow:hidden">
+        
+        <div title="关联客户" id="customers" style="width:100%;height:100%;overflow:hidden">
             <table id="association_customer"></table>
         </div>
+        
     </div>
 </div>
 

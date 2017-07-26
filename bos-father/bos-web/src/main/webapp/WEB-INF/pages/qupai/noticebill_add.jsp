@@ -6,38 +6,57 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>添加业务受理单</title>
     <!-- 导入jquery核心类库 -->
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath }/js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.3.js"></script>
     <!-- 导入easyui类库 -->
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath }/js/easyui/themes/default/easyui.css">
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath }/js/easyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath }/js/easyui/ext/portal.css">
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath }/css/default.css">
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath }/js/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath }/js/easyui/ext/jquery.portal.js"></script>
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath }/js/easyui/ext/jquery.cookie.js"></script>
-    <script
-            src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js"
-            type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/ext/portal.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/css/default.css">
+    <script type="text/javascript" src="${pageContext.request.contextPath }/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath }/js/easyui/ext/jquery.portal.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath }/js/easyui/ext/jquery.cookie.js"></script>
+    <script src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
             $("body").css({visibility: "visible"});
-
+			
+            load(0,province);
             // 对save按钮条件 点击事件
             $('#save').click(function () {
                 // 对form 进行校验
                 if ($('#noticebillForm').form('validate')) {
+                	
+                	var data=document.getElementById("province").selectedOptions[0].text
+                			+document.getElementById("city").selectedOptions[0].text
+                			+document.getElementById("district").selectedOptions[0].text;
+                	$("#ssq").val(data);                	
                     $('#noticebillForm').submit();
                 }
             });
+            
         });
+        
+        
+        function load(pid, target) {
+    		target.length = 1; // 清空目标下拉框
+    		district.length = 1; // 同时清空县数ju
+    		if (pid=="none")return;
+    		//  加载  省市区 所有实现方法
+    		$.ajax({
+    			url: "${pageContext.request.contextPath}/loadCityAction_load",
+    			type:"POST",
+    			data:{"pid" : pid},  
+    			success: function(result) {
+    				$(result).each(function(){
+    					var opt = document.createElement("option");
+    					opt.value = this.id;
+    					opt.innerHTML = this.name;
+    					$(target).append(opt);
+    				});
+    			}
+    		});
+    	}
+        
     </script>
 </head>
 <body class="easyui-layout" style="visibility:hidden;">
@@ -92,11 +111,24 @@
                 <td><input type="text" class="easyui-validatebox" name="volume"
                            required="true"/></td>
             </tr>
+            
             <tr>
-                <td>取件地址</td>
-                <td colspan="3"><input type="text" class="easyui-validatebox" name="pickaddress"
-                                       required="true" size="144"/></td>
-            </tr>
+				<td>取件地址</td>
+					<input type="hidden" name="ssq"  id="ssq">
+					<td colspan="3">省&nbsp;
+					<select name="province" id="province" onchange="load(value,city);">
+						<option value="none">--请选择--</option>
+					</select>&nbsp; 市&nbsp;
+					<select name="city" id="city" onchange="load(value,district);">
+						<option value="none">--请选择--</option>
+					</select>&nbsp;区&nbsp;
+					<select name="district" id="district">
+						<option value="none">--请选择--</option>
+					</select>&nbsp;详细地址
+					<input type="text" class="easyui-validatebox" name="pickaddress" required="true" size="75"/>
+				</td>
+			</tr>
+            
             <tr>
                 <td>到达城市:</td>
                 <td><input type="text" class="easyui-validatebox" name="arrivecity"

@@ -153,14 +153,6 @@ public class SubareaAction extends BaseAction<Subarea> {
         return spec;
     }
 
-    @Action(value = "subareaAction_ajaxList", results = {
-            @Result(name = "ajaxList", type = "fastJson")})
-    public String ajaxList() {
-        List<Subarea> subareas = facadeService.getSubareaService().findAllAjax();
-        push(subareas);
-        return "ajaxList";
-    }
-    
     @Action(value = "subareaAction_noAssociationList", results = {
             @Result(name = "noAssociationList", type = "fastJson")})
     public String noAssociationList() {

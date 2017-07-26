@@ -15,7 +15,7 @@ import com.heima.cxf.crm.domain.Customer;
 public interface ICustomerService {
 
 	@GET
-	@Path("/customer")
+	@Path("/customer/noAssociation")
 	@Produces({ "application/xml", "application/json" })
 	public List<Customer> getNoAssociations();
 
@@ -29,10 +29,9 @@ public interface ICustomerService {
 	public List<Customer> getInUseAssociations(@PathParam("decidezoneId") String decidezone_id);
 
 	@PUT
-	@Path("/customer/{decidezoneId}/{cids}")
+	@Path("/customer/assignCustomerToDecidedZone/{decidezoneId}/{cids}")
 	// /customer/1,2,3/dq001
 	@Consumes({ "application/xml", "application/json" })
 	public void assignCustomerToDecidedZone(@PathParam("cids") String customerids, @PathParam("decidezoneId") String decidedZone_id);
-
 	
 }

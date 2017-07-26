@@ -32,6 +32,9 @@ public class CustomerServiceImpl implements ICustomerService {
 	public void assignCustomerToDecidedZone(String customerids, String decidedZone_id) {
 		customerDao.cancelDecidedZoneCustomers(decidedZone_id);
 		if (StringUtils.isNoneBlank(customerids)) {
+			if ("null".equals(customerids)) {
+				return;
+			}
 			String customerIds[] = customerids.split(",");
 			for (String id : customerIds) {
 				customerDao.assignCustomerToDecidedZone(id, decidedZone_id);

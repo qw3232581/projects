@@ -22,13 +22,13 @@ public class CustomerDAOImpl extends HibernateDaoSupport implements ICustomerDAO
 	@Override
 	public List<Customer> getNoAssociations() {
 		List<Customer> list = getHibernateTemplate().find("from Customer where decidedzoneId  is null");
-		return list.isEmpty() ? null : list;
+		return list;
 	}
 
 	@Override
 	public List<Customer> getInUseAssociations(String decidezone_id) {
 		List<Customer> list = getHibernateTemplate().find("from Customer where decidedzoneId = ?", decidezone_id);
-		return list.isEmpty() ? null : list;
+		return list;
 	}
 
 	@Override

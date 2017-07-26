@@ -11,8 +11,6 @@ import com.heima.bos.domain.bc.Subarea;
 
 public interface SubareaDao extends JpaRepository<Subarea, String>, JpaSpecificationExecutor<Subarea> {
 
-    @Query("from Subarea where decidedzone is null")
-    List<Subarea> findAllAjax();
 
     @Modifying
     @Query("update Subarea set decidedzone.id = ?2 where id =?1")
@@ -20,5 +18,8 @@ public interface SubareaDao extends JpaRepository<Subarea, String>, JpaSpecifica
 
     @Query("from Subarea where decidedzone is null")
 	List<Subarea> noAssociationList();
+
+    @Query("from Subarea where decidedzone.id = ?1")
+	List<Subarea> findAssociationSubarea(String d_id);
 
 }

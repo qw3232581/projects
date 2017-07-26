@@ -1,9 +1,15 @@
 package com.heima.bos.service.facade;
 
-import com.heima.bos.service.bc.*;
-import com.heima.bos.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.heima.bos.service.bc.DecidedzoneService;
+import com.heima.bos.service.bc.RegionService;
+import com.heima.bos.service.bc.StaffService;
+import com.heima.bos.service.bc.StandardService;
+import com.heima.bos.service.bc.SubareaService;
+import com.heima.bos.service.city.CityService;
+import com.heima.bos.service.user.UserService;
 
 @Service
 public class FacadeService {
@@ -20,6 +26,8 @@ public class FacadeService {
     private SubareaService subareaService;
     @Autowired
     private DecidedzoneService decidedzoneService;
+    @Autowired
+    private CityService cityService;
 
     public UserService getUserService() {
         return userService;
@@ -43,6 +51,10 @@ public class FacadeService {
 
     public DecidedzoneService getDecidedzoneService() {
         return decidedzoneService;
+    }
+    
+    public CityService getCityService() {
+    	return cityService;
     }
 
 

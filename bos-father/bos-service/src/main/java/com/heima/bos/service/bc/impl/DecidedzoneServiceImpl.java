@@ -21,6 +21,7 @@ import com.heima.bos.service.bc.DecidedzoneService;
 
 @Service
 @Transactional
+@SuppressWarnings("all")
 public class DecidedzoneServiceImpl implements DecidedzoneService {
 
     @Autowired
@@ -53,15 +54,16 @@ public class DecidedzoneServiceImpl implements DecidedzoneService {
 		String url = BaseInterface.CRM_BASE_URL + "noAssociation";
 		List<Customer> list = (List<Customer>) WebClient.create(url)
 								.accept(MediaType.APPLICATION_JSON).getCollection(Customer.class);
-		return list.isEmpty() ? null : list;
+		return list;
 	}
 
 	@Override
 	public List<Customer> findAssociatedCustomers(String id) {
 		String url = BaseInterface.CRM_BASE_URL +id;
+		
 		List<Customer> list = (List<Customer>) WebClient.create(url)
 								.accept(MediaType.APPLICATION_JSON).getCollection(Customer.class);
-		return list.isEmpty() ? null : list;
+		return list;
 	}
 
 	@Override
@@ -74,6 +76,8 @@ public class DecidedzoneServiceImpl implements DecidedzoneService {
 			}
 			String cids = sb.substring(0,sb.length() - 1);
 			url = url + "/" + cids;
+		}else{
+			url = url + "/null";
 		}
 		WebClient.create(url).put(null);
 	}

@@ -50,14 +50,14 @@ public class SubareaServiceImpl implements SubareaService {
         return subareaDao.findAll(specification);
     }
 
-    @Override
-    public List<Subarea> findAllAjax() {
-        return subareaDao.findAllAjax();
-    }
-
 	@Override
 	public List<Subarea> noAssociationList() {
 		return subareaDao.noAssociationList();
+	}
+
+	@Override
+	public List<Subarea> findAssociationSubarea(String d_id) {
+		return subareaDao.findAssociationSubarea(d_id);
 	}
 
 }

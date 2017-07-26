@@ -5,17 +5,19 @@
 
 <hibernate-reverse-engineering>
     <schema-selection match-table="t_user" match-catalog="bos"/>
+    
     <schema-selection match-table="bc_standard" match-catalog="bos"/>
     <schema-selection match-table="bc_region" match-catalog="bos"/>
     <schema-selection match-table="bc_staff" match-catalog="bos"/>
     <schema-selection match-table="bc_subarea" match-catalog="bos"/>
     <schema-selection match-table="bc_decidedzone" match-catalog="bos"/>
+    
+    <schema-selection match-table="qp_noticebill" match-catalog="bos"/>
+    <schema-selection match-table="qp_workbill" match-catalog="bos"/>
+    <schema-selection match-table="qp_workordermanage" match-catalog="bos"/>
+    
+    <schema-selection match-table="city" match-catalog="bos"/>
 
-    <!--   <table name="goods" catalog="ssh_store" class="cn.itcast.ssh.storemanager.domain.Good"> -->
-    <!-- 		<primary-key> -->
-    <!-- 			<generator class="uuid"></generator> -->
-    <!-- 		</primary-key> -->
-    <!-- 	</table> -->
     <table name="t_user" catalog="bos" class="com.heima.bos.domain.user.User"></table>
     <table name="bc_standard" catalog="bos" class="com.heima.bos.domain.basic.Standard"></table>
     <table name="bc_region" catalog="bos" class="com.heima.bos.domain.basic.Region">
@@ -38,5 +40,21 @@
             <generator class="uuid"></generator>
         </primary-key>
     </table>
+    <table name="qb_noticebill" catalog="bos" class="com.heima.bos.domain.Noticebill">
+        <primary-key>
+            <generator class="uuid"></generator>
+        </primary-key>
+    </table>
+    <table name="qb_workordermanage" catalog="bos" class="com.heima.bos.domain.Workordermanage">
+        <primary-key>
+            <generator class="uuid"></generator>
+        </primary-key>
+    </table>
+    <table name="qb_workbill" catalog="bos" class="com.heima.bos.domain.Workbill">
+        <primary-key>
+            <generator class="uuid"></generator>
+        </primary-key>
+    </table>
+    <table name="city" catalog="bos" class="com.heima.bos.domain.city.City"></table>
 
 </hibernate-reverse-engineering>

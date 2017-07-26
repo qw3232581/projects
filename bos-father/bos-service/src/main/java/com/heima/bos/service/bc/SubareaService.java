@@ -21,7 +21,7 @@ public interface SubareaService {
 
 	List<Subarea> noAssociationList();
 
-	List<Subarea> findAllAjax();
+	List<Subarea> findAssociationSubarea(String d_id);
 
 
 }

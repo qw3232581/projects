@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import com.heima.bos.base.BaseAction;
 import com.heima.bos.domain.bc.Decidedzone;
 import com.heima.bos.domain.bc.Staff;
+import com.heima.bos.domain.bc.Subarea;
 import com.heima.bos.domain.customer.Customer;
 
 @Controller
@@ -41,8 +42,6 @@ public class DecidedzoneAction extends BaseAction<Decidedzone> {
     public void setAssociation(String association) {
         this.association = association;
     }
-    
-   
 
     @Action(value = "decidedzoneAction_saveDecidedzone", results = {
             @Result(name = "saveDecidedzone", location = "/WEB-INF/pages/base/decidedzone.jsp")})
@@ -140,5 +139,26 @@ public class DecidedzoneAction extends BaseAction<Decidedzone> {
 		facadeService.getDecidedzoneService().assignCustomersToDecidedzone(model.getId(),customerIds);
 		return "assignCustomersToDecidedzone";
 	}
+	
+	@Action(value = "decidedzoneAction_findAssociationSubarea", results = {
+			@Result(name = "findAssociationSubarea",type="fastJson" )})
+	public String findAssociationSubarea() {
+		List<Subarea> subareas = facadeService.getSubareaService().findAssociationSubarea(model.getId());
+		push(subareas);
+		return "findAssociationSubarea";
+	}
+	
+	@Action(value = "decidedzoneAction_findAssociationCustomer", results = {
+			@Result(name = "findAssociationCustomer",type="fastJson" ,params={"includeProperties","id,name,station"})})
+	public String findAssociationCustomer() {
+		try {
+			List<Customer> customers = facadeService.getDecidedzoneService().findAssociatedCustomers(model.getId());
+			push(customers);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "findAssociationCustomer";
+	}
 
+	
 }
