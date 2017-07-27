@@ -154,4 +154,18 @@ public class User implements java.io.Serializable {
         this.noticeBills = noticeBills;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", birthday=" + birthday +
+                ", email='" + email + '\'' +
+                ", gender='" + gender + '\'' +
+                ", password='" + password + '\'' +
+                ", remark='" + remark + '\'' +
+                ", salary=" + salary +
+                ", station='" + station + '\'' +
+                ", telephone='" + telephone + '\'' +
+                '}';
+    }
 }

@@ -39,6 +39,7 @@ public class NoticeBillAction extends BaseAction<NoticeBill> {
     @Action(value = "noticeBillAction_saveNoticeBill",
             results = {@Result(name = "saveNoticeBill",location = "/WEB-INF/pages/qupai/noticebill_add.jsp") })
     public String saveNoticeBill() {
+
         User loginUser = (User) getSessionAttribute("loginUser");
         model.setUser(loginUser);
         String province = getParameter("nprovince");

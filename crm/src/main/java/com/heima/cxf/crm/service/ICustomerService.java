@@ -42,7 +42,7 @@ public interface ICustomerService {
 	@Produces({ "application/xml", "application/json" })
 	Customer saveBillNotice(Customer customer);
 
-	@PUT
+	@GET
 	@Path("/customer/findCustomerByAddress/{pickAddress}")
 	@Consumes({ "application/xml", "application/json" })
 	@Produces({ "application/xml", "application/json" })

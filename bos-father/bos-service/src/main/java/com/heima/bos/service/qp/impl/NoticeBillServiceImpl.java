@@ -57,7 +57,7 @@ public class NoticeBillServiceImpl implements NoticeBillService {
     @Override
     public void saveNoticeBill(final NoticeBill model, String province, String city, String district) {
         noticeBillDao.saveAndFlush(model);
-        if (model.getCustomerId()!=null){
+        if (!("null".equalsIgnoreCase(String.valueOf(model.getCustomerId())))){
             String url = BaseInterface.CRM_BASE_URL + "updateAddressById/" + model .getCustomerId() +"/"+model.getPickaddress();
             WebClient.create(url).put(null);
         }else {
@@ -73,30 +73,36 @@ public class NoticeBillServiceImpl implements NoticeBillService {
             model.setCustomerId(customer.getId());
         }
 
-        String url = BaseInterface.CRM_BASE_URL + "findCustomerByAddress" + model.getPickaddress();
+        //地址库完全匹配
+        String url = BaseInterface.CRM_BASE_URL + "findCustomerByAddress/" + model.getPickaddress();
+        Customer c = WebClient.create(url).accept(MediaType.APPLICATION_JSON).get(Customer.class);
 
-        Customer c = WebClient.create(url).get(Customer.class);
-        if (StringUtils.isNotBlank(c.getDecidedzoneId())){
-            Decidedzone decidedzone = decidedzoneDao.findOne(c.getDecidedzoneId());
-            final Staff staff = decidedzone.getStaff();
-            model.setStaff(staff);
-            model.setOrdertype("自动");
-            WorkBill workBill = new WorkBill();
-            workBill.setBuildtime(new Date(System.currentTimeMillis()));
-            workBill.setAttachbilltimes(0);
-            workBill.setStaff(staff);
-            workBill.setNoticeBill(model);
-            workBill.setPickstate("新单");
-            workBill.setType("新");
-            workBill.setRemark(model.getRemark());
+        if (c!=null){
+            String decidedzoneId = c.getDecidedzoneId();
+            if (StringUtils.isNotBlank(decidedzoneId)){
+                Decidedzone decidedzone = decidedzoneDao.findOne(c.getDecidedzoneId());
+                Staff staff = decidedzone.getStaff();
+                model.setStaff(staff);
+                model.setOrdertype("自动");
+                WorkBill workBill = new WorkBill();
+                workBill.setBuildtime(new Date(System.currentTimeMillis()));
+                workBill.setAttachbilltimes(0);
+                workBill.setStaff(staff);
+                workBill.setNoticeBill(model);
+                workBill.setPickstate("新单");
+                workBill.setType("新-完全匹配");
+                workBill.setRemark(model.getRemark());
 
-            workBillDao.save(workBill);
+                workBillDao.save(workBill);
 
-            sendBillMessage(model,staff);
-            return;
+                sendBillMessage(model,staff);
+                return;
 
+            }
         }
 
+
+        //匹配分区
         Region region = reginDao.findRegionsByDetailedAddress(province,city,district);
         Set<Subarea> subareas = region.getSubareas();
         if (subareas != null && subareas.size() >0){
@@ -104,14 +110,14 @@ public class NoticeBillServiceImpl implements NoticeBillService {
                 if (model.getPickaddress().contains(subarea.getAddresskey())){
                     Decidedzone zone = subarea.getDecidedzone();
                     if (zone != null){
-                        final Staff staff = zone.getStaff();
+                        Staff staff = zone.getStaff();
                         model.setStaff(staff);
                         model.setOrdertype("自动");
                         WorkBill bill = new WorkBill();
                         bill.setAttachbilltimes(0);
                         bill.setBuildtime(new Date(System.currentTimeMillis()));
                         bill.setNoticeBill(model);
-                        bill.setType("新");
+                        bill.setType("新-匹配分区");
                         bill.setStaff(staff);
                         bill.setRemark(model.getRemark());
                         bill.setPickstate("新单");
@@ -131,7 +137,7 @@ public class NoticeBillServiceImpl implements NoticeBillService {
         model.setOrdertype("手工");
     }
 
-    public void sendBillMessage(final NoticeBill model, final Staff staff){
+    private void sendBillMessage(final NoticeBill model, final Staff staff){
         jmsTemplate.send("bos_staff", new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {

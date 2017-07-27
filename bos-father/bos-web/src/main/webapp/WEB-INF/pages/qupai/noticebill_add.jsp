@@ -91,12 +91,12 @@
 <div region="north" style="height:31px;overflow:hidden;" split="false"
      border="false">
     <div class="datagrid-toolbar">
-        <a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">新单</a>
-        <a id="edit" icon="icon-edit" href="${pageContext.request.contextPath }/noticeBillAction_saveNoticeBill" class="easyui-linkbutton" plain="true">工单操作</a>
+        <a id="save" icon="icon-save" href="javascript:;" class="easyui-linkbutton" plain="true">新单</a>
+        <a id="edit" icon="icon-edit" href="#" class="easyui-linkbutton" plain="true">工单操作</a>
     </div>
 </div>
 <div region="center" style="overflow:auto;padding:5px;" border="false">
-    <form id="noticebillForm" action="" method="post">
+    <form id="noticebillForm" action="${pageContext.request.contextPath }/noticeBillAction_saveNoticeBill" method="post">
         <table class="table-edit" width="95%" align="center">
             <tr class="title">
                 <td colspan="4">客户信息</td>
