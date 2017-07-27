@@ -43,4 +43,25 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	}
 
+	@Override
+	public Customer findCustomerByTelephone(String telephone) {
+		return customerDao.findCustomerByTelephone(telephone);
+	}
+
+    @Override
+    public void updateAddressById(Integer customerId, String pickAddress) {
+        customerDao.updateAddressById(customerId,pickAddress);
+    }
+
+    @Override
+    public Customer saveBillNotice(Customer customer) {
+        return customerDao.save(customer);
+    }
+
+    @Override
+    public Customer findCustomerByAddress(String pickAddress) {
+        return customerDao.findCustomerByAddress(pickAddress);
+    }
+
+
 }

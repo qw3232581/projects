@@ -1,7 +1,9 @@
 package com.heima.cxf.crm.dao.impl;
 
+import java.io.Serializable;
 import java.util.List;
 
+import com.sun.jndi.cosnaming.IiopUrl;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -21,14 +23,12 @@ public class CustomerDAOImpl extends HibernateDaoSupport implements ICustomerDAO
 	
 	@Override
 	public List<Customer> getNoAssociations() {
-		List<Customer> list = getHibernateTemplate().find("from Customer where decidedzoneId  is null");
-		return list;
+        return getHibernateTemplate().find("from Customer where decidedzoneId  is null");
 	}
 
 	@Override
 	public List<Customer> getInUseAssociations(String decidezone_id) {
-		List<Customer> list = getHibernateTemplate().find("from Customer where decidedzoneId = ?", decidezone_id);
-		return list;
+        return getHibernateTemplate().find("from Customer where decidedzoneId = ?", decidezone_id);
 	}
 
 	@Override
@@ -43,5 +43,30 @@ public class CustomerDAOImpl extends HibernateDaoSupport implements ICustomerDAO
 		getSession().createQuery("update Customer set decidedzoneId = null where decidedzoneId = ?").setParameter(0, decidedZone_id).executeUpdate();
 
 	}
+
+	@Override
+	public Customer findCustomerByTelephone(String telephone) {
+        List<Customer> list = getHibernateTemplate().find("from Customer where telephone = ?", telephone);
+        return list.isEmpty()? null : list.get(0);
+	}
+
+	@Override
+	public Customer save(Customer customer) {
+		Serializable id = getHibernateTemplate().save(customer);
+		customer.setId((Integer) id);
+		return customer;
+	}
+
+	@Override
+	public void updateAddressById(Integer customerId, String pickAddress) {
+        getSession().createQuery("update Customer set address = ? where  id = ? ")
+                .setParameter(0,pickAddress ).setParameter(1,customerId).executeUpdate();
+	}
+
+    @Override
+    public Customer findCustomerByAddress(String pickAddress) {
+        List list = getHibernateTemplate().find("from Customer where address = ?", pickAddress);
+        return list.isEmpty() ? null : (Customer) list.get(0);
+    }
 
 }

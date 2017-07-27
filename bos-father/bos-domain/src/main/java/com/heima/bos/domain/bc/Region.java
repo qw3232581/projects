@@ -33,7 +33,7 @@ public class Region implements java.io.Serializable {
     private String postcode;
     private String shortcode;
     private String citycode;
-    private Set<Subarea> subareas = new HashSet<Subarea>(0);
+    private Set<Subarea> subareas = new HashSet<>(0);
 
     public Region() {
     }

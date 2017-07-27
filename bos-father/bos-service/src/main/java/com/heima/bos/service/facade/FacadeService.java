@@ -1,5 +1,6 @@
 package com.heima.bos.service.facade;
 
+import com.heima.bos.service.qp.NoticeBillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,8 @@ public class FacadeService {
     private DecidedzoneService decidedzoneService;
     @Autowired
     private CityService cityService;
+    @Autowired
+    private NoticeBillService noticeBillService;
 
     public UserService getUserService() {
         return userService;
@@ -57,5 +60,5 @@ public class FacadeService {
     	return cityService;
     }
 
-
+    public NoticeBillService getNoticeBillService()  {return noticeBillService;}
 }

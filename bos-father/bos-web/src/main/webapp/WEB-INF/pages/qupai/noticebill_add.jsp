@@ -25,15 +25,43 @@
             $('#save').click(function () {
                 // 对form 进行校验
                 if ($('#noticebillForm').form('validate')) {
-                	
-                	var data=document.getElementById("province").selectedOptions[0].text
-                			+document.getElementById("city").selectedOptions[0].text
-                			+document.getElementById("district").selectedOptions[0].text;
-                	$("#ssq").val(data);                	
+
+                    var nprovincetext=document.getElementById("province").selectedOptions[0].text;
+                    var ncitytext = document.getElementById("city").selectedOptions[0].text
+                    var ndistricttext = document.getElementById("district").selectedOptions[0].text;
+                    // 给隐藏域赋值
+                    $("#nprovince").val(nprovincetext);
+                    $("#ncity").val(ncitytext);
+                    $("#ndistrict").val(ndistricttext);
+
                     $('#noticebillForm').submit();
                 }
             });
-            
+
+            $('#telephone').blur(function () {
+                if (this.value==""){
+                    $.messager.alert("警告","请输入有效的电话号码","warning");
+                    return
+                }else{
+                    $.post("${pageContext.request.contextPath}/noticeBillAction_findCustomerByTelephone",{"telephone":this.value},function (data) {
+                        if(data==null){
+                            //  新客户 提示
+                            $("#tel_sp").html("<font color='green'>新客户</font>");
+                            $("#customerId").val("");
+                            $("#customerId").hide();//  hide 隐藏
+                            $("#customerName").val("");
+                        }else {
+                            // 老客户  回显信息
+                            $("#tel_sp").html("<font color='blue'>老用户</font>");
+                            $("#customerId").show();//
+                            $("#customerId").val(data.id);
+                            $("#customerId").attr("readonly","readonly");
+                            $("#customerName").val(data.name);
+                        }
+                    })
+                }
+            })
+
         });
         
         
@@ -63,11 +91,8 @@
 <div region="north" style="height:31px;overflow:hidden;" split="false"
      border="false">
     <div class="datagrid-toolbar">
-        <a id="save" icon="icon-save" href="#" class="easyui-linkbutton"
-           plain="true">新单</a>
-        <a id="edit" icon="icon-edit" href="${pageContext.request.contextPath }/page_qupai_noticebill.action"
-           class="easyui-linkbutton"
-           plain="true">工单操作</a>
+        <a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">新单</a>
+        <a id="edit" icon="icon-edit" href="${pageContext.request.contextPath }/noticeBillAction_saveNoticeBill" class="easyui-linkbutton" plain="true">工单操作</a>
     </div>
 </div>
 <div region="center" style="overflow:auto;padding:5px;" border="false">
@@ -78,43 +103,34 @@
             </tr>
             <tr>
                 <td>来电号码:</td>
-                <td><input type="text" class="easyui-validatebox" name="telephone"
-                           required="true"/></td>
+                <td><input type="text" id="telephone" class="easyui-validatebox" name="telephone" required="true"/>
+                    <span id="tel_sp"></span>
+                </td>
                 <td>客户编号:</td>
-                <td><input type="text" class="easyui-validatebox" name="customerId"
-                           required="true"/></td>
+                <td><input type="text" id="customerId" class="easyui-validatebox" name="customerId" required="true"/></td>
             </tr>
             <tr>
                 <td>客户姓名:</td>
-                <td><input type="text" class="easyui-validatebox" name="customerName"
-                           required="true"/></td>
-                <td>联系人:</td>
-                <td><input type="text" class="easyui-validatebox" name="delegater"
-                           required="true"/></td>
+                <td><input type="text" id="customerName" class="easyui-validatebox" name="customerName" required="true"/></td>
             </tr>
             <tr class="title">
                 <td colspan="4">货物信息</td>
             </tr>
             <tr>
                 <td>品名:</td>
-                <td><input type="text" class="easyui-validatebox" name="product"
-                           required="true"/></td>
+                <td><input type="text" class="easyui-validatebox" name="product" required="true"/></td>
                 <td>件数:</td>
-                <td><input type="text" class="easyui-numberbox" name="num"
-                           required="true"/></td>
+                <td><input type="text" class="easyui-numberbox" name="num" required="true"/></td>
             </tr>
             <tr>
                 <td>重量:</td>
-                <td><input type="text" class="easyui-numberbox" name="weight"
-                           required="true"/></td>
+                <td><input type="text" class="easyui-numberbox" name="weight"  required="true"/></td>
                 <td>体积:</td>
-                <td><input type="text" class="easyui-validatebox" name="volume"
-                           required="true"/></td>
+                <td><input type="text" class="easyui-validatebox" name="volume" required="true"/></td>
             </tr>
             
             <tr>
 				<td>取件地址</td>
-					<input type="hidden" name="ssq"  id="ssq">
 					<td colspan="3">省&nbsp;
 					<select name="province" id="province" onchange="load(value,city);">
 						<option value="none">--请选择--</option>
@@ -127,20 +143,23 @@
 					</select>&nbsp;详细地址
 					<input type="text" class="easyui-validatebox" name="pickaddress" required="true" size="75"/>
 				</td>
+
+                <input type="hidden" name="nprovince" id="nprovince">
+                <input type="hidden" name="ncity" id="ncity">
+                <input type="hidden" name="ndistrict" id="ndistrict">
+
+
 			</tr>
             
             <tr>
                 <td>到达城市:</td>
-                <td><input type="text" class="easyui-validatebox" name="arrivecity"
-                           required="true"/></td>
+                <td><input type="text" class="easyui-validatebox" name="arrivecity" required="true"/></td>
                 <td>预约取件时间:</td>
-                <td><input type="text" class="easyui-datebox" name="pickdate"
-                           data-options="required:true, editable:false"/></td>
+                <td><input type="text" class="easyui-datebox" name="pickdate" data-options="required:true, editable:false"/></td>
             </tr>
             <tr>
                 <td>备注:</td>
-                <td colspan="3"><textarea rows="5" cols="80" type="text" class="easyui-validatebox" name="remark"
-                                          required="true"></textarea></td>
+                <td colspan="3"><textarea rows="5" cols="80" type="text" class="easyui-validatebox" name="remark" required="true"></textarea></td>
             </tr>
         </table>
     </form>
