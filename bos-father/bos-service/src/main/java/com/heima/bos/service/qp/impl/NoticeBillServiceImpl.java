@@ -101,6 +101,7 @@ public class NoticeBillServiceImpl implements NoticeBillService {
             }
         }
 
+        
 
         //匹配分区
         Region region = reginDao.findRegionsByDetailedAddress(province,city,district);
