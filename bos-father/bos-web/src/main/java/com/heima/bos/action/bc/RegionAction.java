@@ -101,6 +101,7 @@ public class RegionAction extends BaseAction<Region> {
 
     @Action(value = "regionAction_pageQuery")
     public String pageQuery() {
+
     	Specification<Region> spec = getSpecification();
     	
 //        if (StringUtils.isNotBlank(model.getProvince())||StringUtils.isNotBlank(model.getCity())

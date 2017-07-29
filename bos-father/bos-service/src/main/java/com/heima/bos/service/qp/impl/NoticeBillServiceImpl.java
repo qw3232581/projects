@@ -56,22 +56,11 @@ public class NoticeBillServiceImpl implements NoticeBillService {
 
     @Override
     public void saveNoticeBill(final NoticeBill model, String province, String city, String district) {
+        boolean flag = false;
         noticeBillDao.saveAndFlush(model);
-        if (!("null".equalsIgnoreCase(String.valueOf(model.getCustomerId())))){
-            String url = BaseInterface.CRM_BASE_URL + "updateAddressById/" + model .getCustomerId() +"/"+model.getPickaddress();
-            WebClient.create(url).put(null);
-        }else {
-            String url = BaseInterface.CRM_BASE_URL + "saveBillNotice";
-            Customer c = new Customer();
-            c.setName(model.getCustomerName());
-            c.setAddress(model.getPickaddress());
-            c.setDecidedzoneId(null);
-            c.setStation("hangtou");
-            c.setTelephone(model.getTelephone());
-            Response post = WebClient.create(url).accept(MediaType.APPLICATION_JSON).post(c);
-            Customer customer = post.readEntity(Customer.class);
-            model.setCustomerId(customer.getId());
-        }
+
+        final String address = model.getPickaddress();
+        model.setPickaddress(province + city + district + model.getPickaddress());
 
         //地址库完全匹配
         String url = BaseInterface.CRM_BASE_URL + "findCustomerByAddress/" + model.getPickaddress();
@@ -81,7 +70,7 @@ public class NoticeBillServiceImpl implements NoticeBillService {
             String decidedzoneId = c.getDecidedzoneId();
             if (StringUtils.isNotBlank(decidedzoneId)){
                 Decidedzone decidedzone = decidedzoneDao.findOne(c.getDecidedzoneId());
-                Staff staff = decidedzone.getStaff();
+                final Staff staff = decidedzone.getStaff();
                 model.setStaff(staff);
                 model.setOrdertype("自动");
                 WorkBill workBill = new WorkBill();
@@ -95,13 +84,25 @@ public class NoticeBillServiceImpl implements NoticeBillService {
 
                 workBillDao.save(workBill);
 
-                sendBillMessage(model,staff);
+                jmsTemplate.send("bos_staff", new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        MapMessage mapMessage = session.createMapMessage();
+                        mapMessage.setString("customername", model.getCustomerName());
+                        mapMessage.setString("customertel", model.getTelephone());
+                        mapMessage.setString("customeraddr", address);
+                        mapMessage.setString("stafftelephone", staff.getTelephone());
+                        return mapMessage;
+                    }
+                });
+
+                flag = true;
+                crmCustomer(model, flag);
+
                 return;
 
             }
         }
-
-        
 
         //匹配分区
         Region region = reginDao.findRegionsByDetailedAddress(province,city,district);
@@ -111,7 +112,7 @@ public class NoticeBillServiceImpl implements NoticeBillService {
                 if (model.getPickaddress().contains(subarea.getAddresskey())){
                     Decidedzone zone = subarea.getDecidedzone();
                     if (zone != null){
-                        Staff staff = zone.getStaff();
+                        final Staff staff = zone.getStaff();
                         model.setStaff(staff);
                         model.setOrdertype("自动");
                         WorkBill bill = new WorkBill();
@@ -124,10 +125,22 @@ public class NoticeBillServiceImpl implements NoticeBillService {
                         bill.setPickstate("新单");
                         workBillDao.save(bill);
 
-                        sendBillMessage(model,staff);
+                        jmsTemplate.send("bos_staff", new MessageCreator() {
+                            @Override
+                            public Message createMessage(Session session) throws JMSException {
+                                MapMessage mapMessage = session.createMapMessage();
+                                mapMessage.setString("customername", model.getCustomerName());
+                                mapMessage.setString("customertel", model.getTelephone());
+                                mapMessage.setString("customeraddr", address);
+                                mapMessage.setString("stafftelephone", staff.getTelephone());
+                                return mapMessage;
+                            }
+                        });
+
+                        flag = false;
+                        crmCustomer(model, flag);
 
                         return;
-
 
                     }
                 }
@@ -135,21 +148,31 @@ public class NoticeBillServiceImpl implements NoticeBillService {
             }
         }
 
+        crmCustomer(model, flag);
         model.setOrdertype("手工");
+
     }
 
-    private void sendBillMessage(final NoticeBill model, final Staff staff){
-        jmsTemplate.send("bos_staff", new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                MapMessage mapMessage = session.createMapMessage();
-                mapMessage.setString("telephone", staff.getTelephone());
-                mapMessage.setString("msg", "你好,客户名称=" + model.getCustomerName() + "---送达地址=" + model.getArrivecity());
-                return mapMessage;
+    private void crmCustomer(NoticeBill model, boolean flag) {
+        if (!("null".equalsIgnoreCase(String.valueOf(model.getCustomerId())))){
+            if (!flag){
+                String url = BaseInterface.CRM_BASE_URL + "updateAddressById/" +
+                        model .getCustomerId() +"/"+model.getPickaddress();
+                WebClient.create(url).put(null);
             }
-        });
+        }else {
+            String url = BaseInterface.CRM_BASE_URL + "saveBillNotice";
+            Customer c = new Customer();
+            c.setName(model.getCustomerName());
+            c.setAddress(model.getPickaddress());
+            c.setDecidedzoneId(null);
+            c.setStation("hangtou");
+            c.setTelephone(model.getTelephone());
+            Response post = WebClient.create(url).accept(MediaType.APPLICATION_JSON).post(c);
+            Customer customer = post.readEntity(Customer.class);
+            model.setCustomerId(customer.getId());
+        }
     }
-
 
 }
 

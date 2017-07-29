@@ -53,6 +53,7 @@ public class UserAction extends BaseAction<User> {
     public String login() {
         removeSessionAttribute("key");
         User loginUser = facadeService.getUserService().login(model.getEmail(), model.getPassword());
+
         if (loginUser == null) {
             this.addActionError(getText("login.error.WrongEmailOrPassword"));
             return "login_error";

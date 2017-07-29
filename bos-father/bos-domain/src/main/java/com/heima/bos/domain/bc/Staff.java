@@ -16,6 +16,7 @@ import javax.persistence.UniqueConstraint;
 
 import com.heima.bos.domain.qp.NoticeBill;
 import com.heima.bos.domain.qp.WorkBill;
+import org.apache.struts2.json.annotations.JSON;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.alibaba.fastjson.annotation.JSONField;
@@ -126,6 +127,7 @@ public class Staff implements java.io.Serializable {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "staff")
+    @JSONField(serialize = false)
     public Set<WorkBill> getWorkBills() {
         return this.workBills;
     }
@@ -135,6 +137,7 @@ public class Staff implements java.io.Serializable {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "staff")
+    @JSONField(serialize = false)
     public Set<NoticeBill> getNoticeBills() {
         return this.noticeBills;
     }
@@ -144,8 +147,8 @@ public class Staff implements java.io.Serializable {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "staff")
+
     // json-plugin插件提供注解 在进行json序列化 不会调用该方法
-    // @JSON(serialize = false)
     @JSONField(serialize = false)
     public Set<Decidedzone> getDecidedZones() {
         return this.decidedZones;
