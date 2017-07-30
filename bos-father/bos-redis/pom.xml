@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.heima</groupId>
-        <artifactId>bos-parent</artifactId>
+        <artifactId>bos-father</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>bos-redis</artifactId>

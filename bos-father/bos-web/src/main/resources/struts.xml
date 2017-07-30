@@ -18,17 +18,17 @@
             <result-type name="fastJson" class="com.heima.bos.action.result.fastjson.FastJsonResult"></result-type>
         </result-types>
 
-        <interceptors>
-            <interceptor name="myInterceptor" class="myInterceptor"/>
-            <interceptor-stack name="myStacck">
-                <interceptor-ref name="myInterceptor">
-                    <param name="excludeMethods">login,smsPassword,newPassword,sendValidationCode</param>
-                </interceptor-ref>
-                <interceptor-ref name="defaultStack"/>
-            </interceptor-stack>
-        </interceptors>
+        <!--<interceptors>-->
+            <!--<interceptor name="myInterceptor" class="myInterceptor"/>-->
+            <!--<interceptor-stack name="myStacck">-->
+                <!--<interceptor-ref name="myInterceptor">-->
+                    <!--<param name="excludeMethods">login,smsPassword,newPassword,sendValidationCode</param>-->
+                <!--</interceptor-ref>-->
+                <!--<interceptor-ref name="defaultStack"/>-->
+            <!--</interceptor-stack>-->
+        <!--</interceptors>-->
 
-        <default-interceptor-ref name="myStacck"/>
+        <!--<default-interceptor-ref name="myStacck"/>-->
 
         <global-results>
             <result name="no_login">/login.jsp</result>

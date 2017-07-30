@@ -22,5 +22,5 @@ public interface UserService {
 
     void changePasswordWhenLoggedIn(String newPassword, String email);
 
-
+    User findUserByEmail(String username);
 }

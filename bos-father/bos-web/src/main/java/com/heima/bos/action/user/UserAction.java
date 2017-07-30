@@ -5,6 +5,11 @@ import com.heima.bos.domain.user.User;
 import com.heima.bos.utils.RandStringUtils;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.common.security.UsernameToken;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -52,15 +57,28 @@ public class UserAction extends BaseAction<User> {
     @InputConfig(resultName = "login_exception")
     public String login() {
         removeSessionAttribute("key");
-        User loginUser = facadeService.getUserService().login(model.getEmail(), model.getPassword());
 
-        if (loginUser == null) {
+//        User loginUser = facadeService.getUserService().login(model.getEmail(), model.getPassword());
+//
+//        if (loginUser == null) {
+//            this.addActionError(getText("login.error.WrongEmailOrPassword"));
+//            return "login_error";
+//        } else {
+//            setSessionAttribute("loginUser", loginUser);
+//        }
+//        return "login_success";
+
+        Subject subject = SecurityUtils.getSubject();
+
+        try {
+            subject.login(new UsernamePasswordToken(model.getEmail(),model.getPassword()));
+            return "login_success";
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
             this.addActionError(getText("login.error.WrongEmailOrPassword"));
             return "login_error";
-        } else {
-            setSessionAttribute("loginUser", loginUser);
         }
-        return "login_success";
+
     }
 
     //发送手机验证码

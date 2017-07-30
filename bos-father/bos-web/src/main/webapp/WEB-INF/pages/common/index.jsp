@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -57,7 +57,7 @@
             window.setTimeout(function () {
                 $.messager.show({
                     title: "消息提示",
-                    msg: '欢迎登录，超级管理员！ <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
+                    msg: '欢迎登录！ <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
                     timeout: 5000
                 });
             }, 3000);
@@ -155,7 +155,7 @@
             $.messager
                 .confirm('系统提示', '您确定要退出本次登录吗?', function (isConfirm) {
                     if (isConfirm) {
-                        location.href = '${pageContext.request.contextPath }/login.jsp';
+                        location.href = '${pageContext.request.contextPath }/userAction_logout';
                     }
                 });
         }
@@ -165,7 +165,7 @@
         }
         // 版权信息
         function showAbout() {
-            $.messager.alert("宅急送 v1.0", "设计: yuyang<br/> 管理员邮箱: yuyang@itcast.cn <br/> QQ: 117038615");
+            $.messager.alert("宅急送 v1.0", "Jamayette");
         }
     </script>
 </head>
@@ -178,7 +178,7 @@
     </div>
     <div id="sessionInfoDiv"
          style="position: absolute;right: 5px;top:10px;">
-        [<strong>${loginUser.email }</strong>]，欢迎你！您使用[<strong>192.168.1.100</strong>]IP登录！
+        [<strong><shiro:principal property="email"/></strong>]，欢迎你！您使用[<strong>192.168.1.101</strong>]IP登录！
     </div>
     <div style="position: absolute; right: 5px; bottom: 10px; ">
         <a href="javascript:void(0);" class="easyui-menubutton"

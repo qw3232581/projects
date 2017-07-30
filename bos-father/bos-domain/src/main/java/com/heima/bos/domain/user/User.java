@@ -1,6 +1,7 @@
 package com.heima.bos.domain.user;
 // Generated 2017-7-27 9:50:25 by Hibernate Tools 3.2.2.GA
 
+import com.heima.bos.domain.auth.Role;
 import com.heima.bos.domain.qp.NoticeBill;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -9,17 +10,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 
 /**
@@ -39,6 +30,7 @@ public class User implements java.io.Serializable {
     private String station;
     private String telephone;
     private Set<NoticeBill> noticeBills = new HashSet<>(0);
+    private Set<Role> roles = new HashSet<>(0);
 
     public User() {
     }
@@ -48,7 +40,8 @@ public class User implements java.io.Serializable {
         this.password = password;
     }
 
-    public User(Date birthday, String email, String gender, String password, String remark, Long salary, String station, String telephone, Set<NoticeBill> noticeBills) {
+    public User(Integer id, Date birthday, String email, String gender, String password, String remark, Long salary, String station, String telephone, Set<NoticeBill> noticeBills, Set<Role> roles) {
+        this.id = id;
         this.birthday = birthday;
         this.email = email;
         this.gender = gender;
@@ -58,11 +51,11 @@ public class User implements java.io.Serializable {
         this.station = station;
         this.telephone = telephone;
         this.noticeBills = noticeBills;
+        this.roles = roles;
     }
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-
     @Column(name = "ID", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
@@ -154,18 +147,16 @@ public class User implements java.io.Serializable {
         this.noticeBills = noticeBills;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", birthday=" + birthday +
-                ", email='" + email + '\'' +
-                ", gender='" + gender + '\'' +
-                ", password='" + password + '\'' +
-                ", remark='" + remark + '\'' +
-                ", salary=" + salary +
-                ", station='" + station + '\'' +
-                ", telephone='" + telephone + '\'' +
-                '}';
+    @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @JoinTable(name="user_role", catalog="bos", joinColumns = {
+            @JoinColumn(name="user_id", nullable=false, updatable=false) }, inverseJoinColumns = {
+            @JoinColumn(name="role_id", nullable=false, updatable=false) })
+    public Set<Role> getRoles() {
+        return this.roles;
     }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
 }

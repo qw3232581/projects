@@ -57,5 +57,10 @@ public class UserServiceImpl implements UserService {
         userDao.changePasswordWhenLoggedIn(newPassword, email);
     }
 
+    @Override
+    public User findUserByEmail(String username) {
+        return userDao.findUserByEmail(username);
+    }
+
 
 }
