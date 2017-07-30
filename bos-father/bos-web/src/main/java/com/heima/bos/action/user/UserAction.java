@@ -81,6 +81,15 @@ public class UserAction extends BaseAction<User> {
 
     }
 
+    //用户退出
+    @Action(value = "userAction_logout",
+            results = {@Result(name = "logout", type = "redirect", location = "/login.jsp")})
+    public String logout() {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return "logout";
+    }
+
     //发送手机验证码
     @Action(value = "userAction_sendValidationCode",
             results = {@Result(name = "sendValidationCode", type = "json")})
@@ -148,14 +157,15 @@ public class UserAction extends BaseAction<User> {
             results = {@Result(name = "changePasswordWhenLoggedIn", location = "/WEB-INF/pages/common/index.jsp")})
     public String changePasswordWhenLoggedIn() {
         String newPassword = this.getParameter("newPassword");
-        try {
-            User loginUser = (User) getSessionAttribute("loginUser");
-            facadeService.getUserService().changePasswordWhenLoggedIn(newPassword, loginUser.getEmail());
-            push(true);
-        } catch (Exception e) {
-            push(false);
-            e.printStackTrace();
-        }
+//        try {
+//            User loginUser = (User) getSessionAttribute("loginUser");
+//            facadeService.getUserService().changePasswordWhenLoggedIn(newPassword, loginUser.getEmail());
+//            push(true);
+//        } catch (Exception e) {
+//            push(false);
+//            e.printStackTrace();
+//        }
+
         return "changePasswordWhenLoggedIn";
     }
 

@@ -1,5 +1,9 @@
 package com.heima.bos.service.facade;
 
+import com.heima.bos.domain.auth.Function;
+import com.heima.bos.service.auth.FunctionService;
+import com.heima.bos.service.auth.MenuService;
+import com.heima.bos.service.auth.RoleService;
 import com.heima.bos.service.qp.NoticeBillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,12 @@ public class FacadeService {
     private CityService cityService;
     @Autowired
     private NoticeBillService noticeBillService;
+    @Autowired
+    private FunctionService functionService;
+    @Autowired
+    private MenuService menuService;
+    @Autowired
+    private RoleService roleService;
 
     public UserService getUserService() {
         return userService;
@@ -61,4 +71,11 @@ public class FacadeService {
     }
 
     public NoticeBillService getNoticeBillService()  {return noticeBillService;}
+
+    public FunctionService getFunctionService()  {return functionService;}
+
+    public MenuService getMenuService() {return menuService;}
+
+    public RoleService getRoleService() {return roleService;}
+
 }

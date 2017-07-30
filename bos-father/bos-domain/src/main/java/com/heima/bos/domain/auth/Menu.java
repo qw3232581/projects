@@ -2,6 +2,7 @@ package com.heima.bos.domain.auth;
 // Generated 2017-7-30 16:54:52 by Hibernate Tools 3.2.2.GA
 
 
+import com.alibaba.fastjson.annotation.JSONField;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -26,7 +27,9 @@ public class Menu  implements java.io.Serializable {
      private String page;
      private String generatemenu;
      private Integer zindex;
+     @JSONField(serialize = false)
      private Set<Menu> menus = new HashSet<Menu>(0);
+     @JSONField(serialize = false)
      private Set<Role> roles = new HashSet<Role>(0);
 
     public Menu() {
@@ -107,7 +110,8 @@ public class Menu  implements java.io.Serializable {
     public void setZindex(Integer zindex) {
         this.zindex = zindex;
     }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="menu")
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="menu")
+    @JSONField(serialize=false)
     public Set<Menu> getMenus() {
         return this.menus;
     }
@@ -115,10 +119,11 @@ public class Menu  implements java.io.Serializable {
     public void setMenus(Set<Menu> menus) {
         this.menus = menus;
     }
-@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinTable(name="role_menu", catalog="bos", joinColumns = { 
-        @JoinColumn(name="menu_id", nullable=false, updatable=false) }, inverseJoinColumns = { 
+    @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @JoinTable(name="role_menu", catalog="bos", joinColumns = {
+        @JoinColumn(name="menu_id", nullable=false, updatable=false) }, inverseJoinColumns = {
         @JoinColumn(name="role_id", nullable=false, updatable=false) })
+    @JSONField(serialize = false)
     public Set<Role> getRoles() {
         return this.roles;
     }

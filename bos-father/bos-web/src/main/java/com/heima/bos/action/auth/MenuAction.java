@@ -1,0 +1,63 @@
+package com.heima.bos.action.auth;
+
+import com.heima.bos.base.BaseAction;
+import com.heima.bos.domain.auth.Function;
+import com.heima.bos.domain.auth.Menu;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+
+import java.util.List;
+
+@Controller
+@Scope("prototype")
+@Namespace("/")
+@ParentPackage("bos")
+public class MenuAction extends BaseAction<Menu> {
+
+    @Action(value = "menuAction_saveMenu", results = {
+            @Result(name = "saveMenu", location = "/WEB-INF/pages/admin/menu.jsp")})
+    public String saveMenu() {
+        if (model.getMenu()==null|| StringUtils.isBlank(model.getMenu().getId())){
+            model.setMenu(null);
+        }
+        facadeService.getMenuService().saveMenu(model);
+        return "saveMenu";
+    }
+
+    @Action(value = "menuAction_ajaxListHasSonMenus", results = {
+            @Result(name = "ajaxListHasSonMenus", type = "fastJson",
+                    params = {"includProperties","id,name"})})
+    public String ajaxListHasSonMenus() {
+        List<Menu> list = facadeService.getMenuService().ajaxListHasSonMenus();
+        push(list);
+        return "ajaxListHasSonMenus";
+    }
+
+    @Action(value = "menuAction_ajaxList", results = {
+            @Result(name = "ajaxList", type = "fastJson")})
+    public String ajaxList() {
+        try {
+            List<Menu> list = facadeService.getMenuService().ajaxList();
+            push(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "ajaxList";
+    }
+
+    @Action(value = "menuAction_pageQuery")
+    //TODO redis
+    public String pageQuery() {
+        super.setPage(Integer.parseInt(getParameter("page")));
+        Page<Menu> pageData = facadeService.getMenuService().pageQuery(getPageRequest());
+        setPageDatas(pageData);
+        return "pageQuery";
+    }
+
+}
