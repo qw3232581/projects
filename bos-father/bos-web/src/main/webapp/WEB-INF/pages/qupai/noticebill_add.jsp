@@ -106,8 +106,7 @@
                 <td><input type="text" id="telephone" class="easyui-validatebox" name="telephone" required="true"/>
                     <span id="tel_sp"></span>
                 </td>
-                <td>客户编号:</td>
-                <td><input type="text" id="customerId" class="easyui-validatebox" name="customerId" required="true"/></td>
+                <td><input type="hidden" id="customerId" class="easyui-validatebox" name="customerId" /></td>
             </tr>
             <tr>
                 <td>客户姓名:</td>

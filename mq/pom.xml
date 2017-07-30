@@ -1,91 +1,92 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.heima.mq</groupId>
-  <artifactId>mq</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
-  
-	<properties>
-	  <spring.version>4.2.8.RELEASE</spring.version>
-	  <servlet.version>2.5</servlet.version>
-	  <jsp.version>2.0</jsp.version>
-	  <junit.version>4.11</junit.version>
-	  <!-- 消息队列 active  mq -->
-	  <activemq.version>5.2.0</activemq.version>
-	  </properties>
-  <dependencies>
-	 <!-- spring -->
-  	<dependency>
-  		<groupId>org.springframework</groupId>
-  		<artifactId>spring-context</artifactId>
-  		<version>${spring.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.springframework</groupId>
-  		<artifactId>spring-aspects</artifactId>
-  		<version>${spring.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.springframework</groupId>
-  		<artifactId>spring-web</artifactId>
-  		<version>${spring.version}</version>
-  	</dependency>
-    <!-- active mq 整合spring  -->
-  	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-jms</artifactId>
-		<version>${spring.version}</version>
-	</dependency>
-	<!-- 消息队列 MQ -->
-	<dependency>
-		<groupId>org.apache.activemq</groupId>
-		<artifactId>activemq-all</artifactId>
-		<version>${activemq.version}</version>
-	</dependency>
-	<!-- mq依赖包 项目启动需要jar -->
-	<dependency>
-		<groupId>org.apache.xbean</groupId>
-		<artifactId>xbean-spring</artifactId>
-		<version>3.7</version>
-	</dependency>
-	
-	<dependency>
-  		<groupId>javax.servlet</groupId>
-  		<artifactId>servlet-api</artifactId>
-  		<version>${servlet.version}</version>
-  		<scope>provided</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>javax.servlet</groupId>
-  		<artifactId>jsp-api</artifactId>
-  		<version>${jsp.version}</version>
-  		<scope>provided</scope>
-  	</dependency>
-  	<!-- 阿里短信平台 依赖 -->
-  	<dependency>
-  		<groupId>com.aliyun</groupId>
-  		<artifactId>aliyun-java-sdk-core</artifactId>
-  		<version>3.2.3</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.alicom.message</groupId>
-  		<artifactId>alicom</artifactId>
-  		<version>3.2.3</version>
-  	</dependency>
-  	
-  </dependencies>
-  
-  <build>
-  	<plugins>
-  		<plugin>
-  			<groupId>org.apache.tomcat.maven</groupId>
-  			<artifactId>tomcat7-maven-plugin</artifactId>
-  			<version>2.1</version>
-  			 <configuration>
-  			   <port>9010</port>
-  			 </configuration>
-  		</plugin>
-  	</plugins>
-  </build>
-  
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.heima.mq</groupId>
+    <artifactId>mq</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <spring.version>4.2.8.RELEASE</spring.version>
+        <servlet.version>2.5</servlet.version>
+        <jsp.version>2.0</jsp.version>
+        <junit.version>4.11</junit.version>
+        <!-- 消息队列 active  mq -->
+        <activemq.version>5.2.0</activemq.version>
+    </properties>
+    <dependencies>
+        <!-- spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- active mq 整合spring  -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- 消息队列 MQ -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>${activemq.version}</version>
+        </dependency>
+        <!-- mq依赖包 项目启动需要jar -->
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-spring</artifactId>
+            <version>3.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>${jsp.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 阿里短信平台 依赖 -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>3.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alicom.message</groupId>
+            <artifactId>alicom</artifactId>
+            <version>0.2</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <port>9010</port>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

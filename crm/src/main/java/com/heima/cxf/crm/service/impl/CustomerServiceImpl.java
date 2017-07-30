@@ -51,6 +51,7 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public void updateAddressById(Integer customerId, String pickAddress) {
         customerDao.updateAddressById(customerId,pickAddress);
+		customerDao.setDecidedzoneNull(customerId);
     }
 
     @Override

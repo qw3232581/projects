@@ -24,5 +24,7 @@ public interface ICustomerDAO {
 	void updateAddressById(Integer customerId, String pickAddress);
 
 	Customer findCustomerByAddress(String pickAddress);
+
+	void setDecidedzoneNull(Integer customerId);
 }
 

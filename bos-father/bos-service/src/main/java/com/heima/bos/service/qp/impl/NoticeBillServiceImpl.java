@@ -55,11 +55,12 @@ public class NoticeBillServiceImpl implements NoticeBillService {
     }
 
     @Override
-    public void saveNoticeBill(final NoticeBill model, String province, String city, String district) {
+    public void saveNoticeBill(NoticeBill model, String province, String city, String district) {
+
         boolean flag = false;
         noticeBillDao.saveAndFlush(model);
 
-        final String address = model.getPickaddress();
+        String address = model.getPickaddress();
         model.setPickaddress(province + city + district + model.getPickaddress());
 
         //地址库完全匹配
@@ -69,32 +70,14 @@ public class NoticeBillServiceImpl implements NoticeBillService {
         if (c!=null){
             String decidedzoneId = c.getDecidedzoneId();
             if (StringUtils.isNotBlank(decidedzoneId)){
-                Decidedzone decidedzone = decidedzoneDao.findOne(c.getDecidedzoneId());
-                final Staff staff = decidedzone.getStaff();
+                Decidedzone decidedzone = decidedzoneDao.findOne(decidedzoneId);
+                Staff staff = decidedzone.getStaff();
                 model.setStaff(staff);
                 model.setOrdertype("自动");
-                WorkBill workBill = new WorkBill();
-                workBill.setBuildtime(new Date(System.currentTimeMillis()));
-                workBill.setAttachbilltimes(0);
-                workBill.setStaff(staff);
-                workBill.setNoticeBill(model);
-                workBill.setPickstate("新单");
-                workBill.setType("新-完全匹配");
-                workBill.setRemark(model.getRemark());
 
-                workBillDao.save(workBill);
+                generateWorkBill(model,staff);
 
-                jmsTemplate.send("bos_staff", new MessageCreator() {
-                    @Override
-                    public Message createMessage(Session session) throws JMSException {
-                        MapMessage mapMessage = session.createMapMessage();
-                        mapMessage.setString("customername", model.getCustomerName());
-                        mapMessage.setString("customertel", model.getTelephone());
-                        mapMessage.setString("customeraddr", address);
-                        mapMessage.setString("stafftelephone", staff.getTelephone());
-                        return mapMessage;
-                    }
-                });
+                SendMessage(model, address, staff);
 
                 flag = true;
                 crmCustomer(model, flag);
@@ -115,27 +98,10 @@ public class NoticeBillServiceImpl implements NoticeBillService {
                         final Staff staff = zone.getStaff();
                         model.setStaff(staff);
                         model.setOrdertype("自动");
-                        WorkBill bill = new WorkBill();
-                        bill.setAttachbilltimes(0);
-                        bill.setBuildtime(new Date(System.currentTimeMillis()));
-                        bill.setNoticeBill(model);
-                        bill.setType("新-匹配分区");
-                        bill.setStaff(staff);
-                        bill.setRemark(model.getRemark());
-                        bill.setPickstate("新单");
-                        workBillDao.save(bill);
 
-                        jmsTemplate.send("bos_staff", new MessageCreator() {
-                            @Override
-                            public Message createMessage(Session session) throws JMSException {
-                                MapMessage mapMessage = session.createMapMessage();
-                                mapMessage.setString("customername", model.getCustomerName());
-                                mapMessage.setString("customertel", model.getTelephone());
-                                mapMessage.setString("customeraddr", address);
-                                mapMessage.setString("stafftelephone", staff.getTelephone());
-                                return mapMessage;
-                            }
-                        });
+                        generateWorkBill(model,staff);
+
+                        SendMessage(model, address, staff);
 
                         flag = false;
                         crmCustomer(model, flag);
@@ -153,11 +119,25 @@ public class NoticeBillServiceImpl implements NoticeBillService {
 
     }
 
+    private void SendMessage(final NoticeBill model, final String address, final Staff staff) {
+        jmsTemplate.send("bos_staff", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                MapMessage mapMessage = session.createMapMessage();
+                mapMessage.setString("customername", model.getCustomerName());
+                mapMessage.setString("customertel", model.getTelephone());
+                mapMessage.setString("customeraddr", address);
+                mapMessage.setString("stafftelephone", staff.getTelephone());
+                return mapMessage;
+            }
+        });
+    }
+
     private void crmCustomer(NoticeBill model, boolean flag) {
         if (!("null".equalsIgnoreCase(String.valueOf(model.getCustomerId())))){
             if (!flag){
                 String url = BaseInterface.CRM_BASE_URL + "updateAddressById/" +
-                        model .getCustomerId() +"/"+model.getPickaddress();
+                        model.getCustomerId() +"/"+model.getPickaddress();
                 WebClient.create(url).put(null);
             }
         }else {
@@ -173,6 +153,20 @@ public class NoticeBillServiceImpl implements NoticeBillService {
             model.setCustomerId(customer.getId());
         }
     }
+
+    private void generateWorkBill(final NoticeBill model, final Staff staff) {
+        WorkBill bill = new WorkBill();
+        bill.setAttachbilltimes(0);
+        bill.setBuildtime(new Date(System.currentTimeMillis()));
+        bill.setNoticeBill(model);
+        bill.setType("新");
+        bill.setStaff(staff);
+        bill.setRemark(model.getRemark());
+        bill.setPickstate("新单");
+        workBillDao.save(bill);
+    }
+
+
 
 }
 

@@ -69,4 +69,9 @@ public class CustomerDAOImpl extends HibernateDaoSupport implements ICustomerDAO
         return list.isEmpty() ? null : (Customer) list.get(0);
     }
 
+	@Override
+	public void setDecidedzoneNull(Integer customerId) {
+		getSession().createQuery("update Customer set decidedzoneId =null where id = ?")
+				.setParameter(0, customerId).executeUpdate();
+	}
 }
