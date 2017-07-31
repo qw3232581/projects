@@ -23,26 +23,47 @@ public class RoleAction extends BaseAction<Role> {
     @Action(value = "roleAction_saveRole", results = {
             @Result(name = "saveRole", location = "/WEB-INF/pages/admin/role.jsp")})
     public String saveRole() {
-        facadeService.getRoleService().saveRole(model);
+        try {
+            String[] functionIds = getRequest().getParameterValues("functionIds");
+            String menuIds = getParameter("menuIds");
+
+            facadeService.getRoleService().saveRole(model,menuIds,functionIds);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return "saveRole";
     }
-//
-//    @Action(value = "menuAction_ajaxListHasSonMenus", results = {
-//            @Result(name = "ajaxListHasSonMenus", type = "fastJson",
-//                    params = {"includProperties","id,name"})})
-//    public String ajaxListHasSonMenus() {
-//        List<Menu> list = facadeService.getMenuService().ajaxListHasSonMenus();
-//        push(list);
-//        return "ajaxListHasSonMenus";
-//    }
-//
-//    @Action(value = "menuAction_pageQuery")
-//    //TODO redis
-//    public String pageQuery() {
-//        super.setPage(Integer.parseInt(getParameter("page")));
-//        Page<Menu> pageData = facadeService.getMenuService().pageQuery(getPageRequest());
-//        setPageDatas(pageData);
-//        return "pageQuery";
-//    }
+
+    @Action(value = "roleAction_delRole", results = {
+            @Result(name = "delRole", location = "/WEB-INF/pages/admin/role.jsp")})
+    public String delRole() {
+        try {
+            String roleIds = getParameter("roleIds");
+
+            facadeService.getRoleService().delRole(model,roleIds);
+            push(true);
+        } catch (Exception e) {
+            push(false);
+            e.printStackTrace();
+        }
+        return "delRole";
+    }
+
+
+    @Action(value = "roleAction_ajaxList", results = {
+            @Result(name = "ajaxList", type = "fastJson")})
+    public String ajaxList() {
+        List<Role> roles = facadeService.getRoleService().ajaxList();
+        push(roles);
+        return "ajaxList";
+    }
+
+    @Action(value = "roleAction_pageQuery")
+    //TODO redis
+    public String pageQuery() {
+        Page<Role> pageData = facadeService.getRoleService().pageQuery(getPageRequest());
+        setPageDatas(pageData);
+        return "pageQuery";
+    }
 
 }

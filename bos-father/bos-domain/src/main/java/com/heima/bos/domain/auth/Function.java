@@ -23,7 +23,7 @@ public class Function  implements java.io.Serializable {
      private String name;
      private String code;
      private String description;
-     private Set<Role> roles = new HashSet<Role>(0);
+     private Set<Role> roles = new HashSet<>(0);
 
     public Function() {
     }
@@ -72,7 +72,7 @@ public class Function  implements java.io.Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name="role_function", catalog="bos", joinColumns = { 
         @JoinColumn(name="function_id", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="role_id", nullable=false, updatable=false) })

@@ -16,4 +16,6 @@ public interface MenuService {
     List<Menu> ajaxListHasSonMenus();
 
     List<Menu> ajaxList();
+
+    List<Menu> findMenuByRoleId(String roleId);
 }

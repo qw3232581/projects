@@ -5,27 +5,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Insert title here</title>
-    <!-- 导入jquery核心类库 -->
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath }/js/jquery-1.8.3.js"></script>
-    <!-- 导入easyui类库 -->
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath }/js/easyui/themes/default/easyui.css">
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath }/js/easyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath }/js/easyui/ext/portal.css">
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath }/css/default.css">
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath }/js/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath }/js/easyui/ext/jquery.portal.js"></script>
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath }/js/easyui/ext/jquery.cookie.js"></script>
-    <script
-            src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js"
-            type="text/javascript"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/ext/portal.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/css/default.css">
+    <script type="text/javascript" src="${pageContext.request.contextPath }/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath }/js/easyui/ext/jquery.portal.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath }/js/easyui/ext/jquery.cookie.js"></script>
+    <script src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script type="text/javascript">
         function doAdd() {
             $('#addStaffWindow').window("open");
@@ -325,8 +313,7 @@
 </div>
 
 
-<div class="easyui-window" title="对收派员进行查询" id="queryStaffWindow" collapsible="false"
-     minimizable="false" maximizable="false" style="top:20px;left:200px">
+<div class="easyui-window" title="对收派员进行查询" id="queryStaffWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
     <div region="center" style="overflow:auto;padding:5px;" border="false">
         <form id="queryStaffForm" action="${pageContext.request.contextPath }/staffAction_pageQuery" method="post">
             <table class="table-edit" width="80%" align="center">
@@ -348,8 +335,7 @@
                 <tr>
                     <td>取派标准</td>
                     <td>
-                        <input type="text" id="qstandard" name="standard" class="easyui-combobox"
-                               data-options="valueField:'name',textField:'name',editable:'false',
+                        <input type="text" id="qstandard" name="standard" class="easyui-combobox" data-options="valueField:'name',textField:'name',editable:'false',
 							url:'${pageContext.request.contextPath}/standardAction_ajaxList'"/>
                     </td>
                 </tr>
@@ -361,10 +347,6 @@
             <a id="query" icon="icon-search" href="javascript:;" class="easyui-linkbutton" plain="true">查询</a>
         </div>
     </div>
-
-
 </div>
-
-
 </body>
 </html>	

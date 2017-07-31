@@ -40,15 +40,30 @@ public class MenuAction extends BaseAction<Menu> {
     }
 
     @Action(value = "menuAction_ajaxList", results = {
-            @Result(name = "ajaxList", type = "fastJson")})
+            @Result(name = "ajaxList", type = "fastJson",
+                    params = {"includeProperties","id,name,pId,page"})})
     public String ajaxList() {
         try {
-            List<Menu> list = facadeService.getMenuService().ajaxList();
-            push(list);
+            List<Menu> menus = facadeService.getMenuService().ajaxList();
+            push(menus);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "ajaxList";
+    }
+
+    @Action(value = "menuAction_findMenuByRoleId", results = {
+            @Result(name = "findMenuByRoleId", type = "fastJson",
+                    params = {"includeProperties","id"})})
+    public String findMenuByRoleId() {
+        try {
+            String roleId = getParameter("roleId");
+            List<Menu> menus =  facadeService.getMenuService().findMenuByRoleId(roleId);
+            push(menus);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "findMenuByRoleId";
     }
 
     @Action(value = "menuAction_pageQuery")

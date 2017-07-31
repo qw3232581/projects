@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/js/ztree/zTreeStyle.css" type="text/css" />
 <script src="${pageContext.request.contextPath }/js/ztree/jquery.ztree.all-3.5.js" type="text/javascript"></script>
 <script type="text/javascript">
-var checknodes;// 接受 指定角色对应菜单对象的
+var checknodes;     // 接受 指定角色对应菜单对象的
 var setting = {
 	check: {
 	  enable: true
@@ -59,21 +59,19 @@ $(function(){
 								data:{"roleId":rowData.id},
 								dataType : 'json',
 								success : function(data) {
-										 var pa = $("input[name='functionIds']");
-										$(data).each(function(){
-											 //  List<Function>
-												  for(var i=0;i<pa.length;i++){
-													  if($(pa[i]).val()==this.id){
-															$(pa[i]).attr("checked","checked");
-													   }
-												  }
-										 });
-									}
-								});
+                                    var pa = $("input[name='functionIds']");
+                                    $(data).each(function(){
+                                         //  List<Function>
+                                          for(var i=0;i<pa.length;i++){
+                                              if($(pa[i]).val()==this.id){
+                                                    $(pa[i]).attr("checked","checked");
+                                               }
+                                          }
+                                     });
+                                }
+                            });
 					}
 				});
-
-
 
 			//  双击事件 完成 角色修改回显操作....菜单树制作
 			$.ajax({
@@ -95,14 +93,15 @@ $(function(){
 								  }
 								}
 						}
-
 				},
 				error : function(msg) {
 					alert('树加载异常!');
 				}
 			});
 
-				   $('#roleWindow').window("open");
+            $('#roleId').val(rowData.id);
+
+			$('#roleWindow').window("open");
 		},
 		toolbar : [
 			{
@@ -112,15 +111,15 @@ $(function(){
 				handler : function(){
 					location.href='${pageContext.request.contextPath}/page_admin_role_add.action';
 				}
-			}
+			}, {
+                id: 'button-delete',
+                text: '删除',
+                iconCls: 'icon-cancel',
+                handler: doDelete
+            }
 		],
 		url : '${pageContext.request.contextPath}/roleAction_pageQuery',
 		columns : [[
-			{
-				field : 'id',
-				title : '编号',
-				width : 200
-			},
 			{
 				field : 'name',
 				title : '名称',
@@ -139,17 +138,36 @@ $(function(){
 		]]
 	});
 
-	// 收派标准窗口
 	$('#roleWindow').window({
-		title: '修改角色',
-		width: 500,
+		title: '修改窗口',
+		width: 800,
 		modal: true,
 		shadow: true,
 		closed: true,
-		height: 300,
+		height: 600,
 		resizable:false
 	});
+
+    $('#save').click(function(){
+        if ($("#roleForm").form("validate")){
+            //  确保 选中菜单 id 提交给RoleAction   选中 ztree  id--->string  放到表单隐藏域
+            //  menuIds    ztree 获取选中 checknode选项
+            var treeObj = $.fn.zTree.getZTreeObj("functionTree");
+            var nodes = treeObj.getCheckedNodes(true);//  选中的集合
+            if(nodes!=null&&nodes.length!=0){
+                var arr = new Array();
+                for(var i=0;i<nodes.length;i++){
+                    arr.push(nodes[i].id);
+                }
+                $("#menuIds").val(arr.join(","));
+            }
+            $("#roleForm").submit();
+        }
+    });
+
 });
+
+
  function loadNodes(roleId){
 	 $.ajax({
 	   type:"post",
@@ -162,6 +180,33 @@ $(function(){
 	   }
 	 });
 }
+
+function doDelete() {
+
+    var arr = $("#grid").datagrid("getSelections");
+    if (arr == null || arr.length == 0) {
+        $.messager.alert("提示", "请至少选中一行进行操作", "info")
+    } else {
+        var ids = new Array();
+        for (var i = 0; i < arr.length; i++) {
+            ids.push(arr[i].id);
+        }
+        var idsString = ids.join(",");
+        $.post("${pageContext.request.contextPath}/roleAction_delRole",
+            {"roleIds": idsString},
+            function (data) {
+                if (data) {
+                    $.messager.alert("提示", "操作成功", "info")
+                    $("#grid").datagrid("clearChecked");
+                    $("#grid").datagrid("reload");
+                } else {
+                    $.messager.alert("提示", "操作失败", "info")
+                }
+            })
+    }
+
+ }
+
 </script>	
 </head>
 <body class="easyui-layout">
@@ -176,33 +221,41 @@ $(function(){
 		</div>
 		
 		<div region="center" style="overflow:auto;padding:5px;" border="false">
-			<form id="addStandardForm" method="post" 
-			action="${pageContext.request.contextPath }/standardAction_save">
+			<form id="roleForm" method="post" action="${pageContext.request.contextPath}/roleAction_saveRole">
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
-						<td colspan="2">修改角色信息</td>
+						<td colspan="2">角色信息</td>
+                        <<input type="hidden" name="id" id="roleId">
+                        <input type="hidden" id="menuIds" name="menuIds">
+					</tr>
+					<tr>
+						<td width="200">角色关键字</td>
+						<td>
+							<input type="text" name="code" class="easyui-validatebox" data-options="required:true" />
+						</td>
 					</tr>
 					<tr>
 						<td>角色名称</td>
+						<td><input type="text" name="name" class="easyui-validatebox" data-options="required:true" /></td>
+					</tr>
+					<tr>
+						<td>角色描述</td>
 						<td>
-						<!-- 修改操作 添加一个隐藏域  -->
-						<input type="hidden" name="id" id="id"/>
-						<input type="text" name="name" class="easyui-validatebox" 
-						data-options="required:true"/></td>
+							<textarea name="description" rows="4" cols="60"></textarea>
+						</td>
 					</tr>
 					<tr>
-						<td>权限列表</td>
+						<td>权限</td>
 						<td id="functionIds">
-						 </td>
+						</td>
 					</tr>
 					<tr>
-						<td>菜单树</td>
+						<td>菜单</td>
 						<td>
 							<ul id="functionTree" class="ztree"></ul>
 						</td>
 					</tr>
-			
-					</table>
+				</table>
 			</form>
 		</div>
 	</div>

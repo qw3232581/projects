@@ -27,9 +27,7 @@ public class Menu  implements java.io.Serializable {
      private String page;
      private String generatemenu;
      private Integer zindex;
-     @JSONField(serialize = false)
      private Set<Menu> menus = new HashSet<Menu>(0);
-     @JSONField(serialize = false)
      private Set<Role> roles = new HashSet<Role>(0);
 
     public Menu() {
@@ -110,7 +108,7 @@ public class Menu  implements java.io.Serializable {
     public void setZindex(Integer zindex) {
         this.zindex = zindex;
     }
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="menu")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="menu")
     @JSONField(serialize=false)
     public Set<Menu> getMenus() {
         return this.menus;
@@ -119,7 +117,7 @@ public class Menu  implements java.io.Serializable {
     public void setMenus(Set<Menu> menus) {
         this.menus = menus;
     }
-    @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name="role_menu", catalog="bos", joinColumns = {
         @JoinColumn(name="menu_id", nullable=false, updatable=false) }, inverseJoinColumns = {
         @JoinColumn(name="role_id", nullable=false, updatable=false) })
@@ -132,8 +130,13 @@ public class Menu  implements java.io.Serializable {
         this.roles = roles;
     }
 
-
-
+    @Transient
+    public String getPId(){
+        if (menu == null){
+            return "0";
+        }
+        return menu.getId();
+    }
 
 }
 

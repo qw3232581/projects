@@ -16,4 +16,6 @@ public interface FunctionService {
     Page<Function> pageQuery(Pageable pageRequest);
 
     List<Function> ajaxList();
+
+    List<Function> findFunctionByRoleId(String roleId);
 }

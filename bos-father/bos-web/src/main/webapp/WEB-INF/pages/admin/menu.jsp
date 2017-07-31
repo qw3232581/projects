@@ -18,79 +18,86 @@
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/easyui/ext/jquery.cookie.js"></script>
 <script src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
 <script type="text/javascript">
-$(function(){
-	$("#grid").datagrid({
-		iconCls : 'icon-forward',
-		fit : true,
-		border : false,
-		rownumbers : true,
-		striped : true,
-		pageList: [3,5,10],
-		pagination : true,
-		toolbar : [
-			{
-				id : 'add',
-				text : '添加菜单',
-				iconCls : 'icon-add',
-				handler : function(){
-					location.href='${pageContext.request.contextPath}/page_admin_menu_add.action';
-				}
-			}
-		],
-		url : '${pageContext.request.contextPath}/menuAction_pageQuery',
-		columns : [[
-		  {
-			  field : 'id',
-			  title : '菜单编号',
-			  width : 200
-		  },
-		  {
-			  field : 'name',
-			  title : '菜单名称',
-			  width : 200
-		  },
-		  {
-			  field : 'description',
-			  title : '菜单描述',
-			  width : 200
-		  },
-		  {
-			  field : 'generatemenu',
-			  title : '是否生成菜单',
-			  width : 200,
-			  formatter:function(value,row,index){
-				  if(value=="1"){
-					  return "是";
-				  }else{
-					  return "否";
-				  }
-			  }
-		  },
-		  {
-			  field : 'menu.name',
-			  title : '父菜单名称',
-			  width : 200,
-			  formatter:function(value,row,index){
-				  if(row.menu==null){
-					  return "没有父菜单";
-				  }else{
-					  return row.menu.name;
-				  }
-			  }
-		  },
-		  {
-			  field : 'zindex',
-			  title : '优先级',
-			  width : 200
-		  },
-		  {
-			  field : 'page',
-			  title : '路径',
-			  width : 200
-		  }
-		]]
-	});
-});
+    $(function(){
+        $("#grid").datagrid({
+            iconCls : 'icon-forward',
+            fit : true,
+            border : false,
+            rownumbers : true,
+            striped : true,
+            pageList: [3,5,10],
+            pagination : true,
+            onDblClickRow: doDblClickRow,
+            toolbar : [
+                {
+                    id : 'add',
+                    text : '添加菜单',
+                    iconCls : 'icon-add',
+                    handler : function(){
+                        location.href='${pageContext.request.contextPath}/page_admin_menu_add.action';
+                    }
+                }
+            ],
+            url : '${pageContext.request.contextPath}/menuAction_pageQuery',
+            columns : [[
+              {
+                  field : 'id',
+                  title : '菜单编号',
+                  width : 200
+              },
+              {
+                  field : 'name',
+                  title : '菜单名称',
+                  width : 200
+              },
+              {
+                  field : 'description',
+                  title : '菜单描述',
+                  width : 200
+              },
+              {
+                  field : 'generatemenu',
+                  title : '是否生成菜单',
+                  width : 200,
+                  formatter:function(value,row,index){
+                      if(value=="1"){
+                          return "是";
+                      }else{
+                          return "否";
+                      }
+                  }
+              },
+              {
+                  field : 'menu.name',
+                  title : '父菜单名称',
+                  width : 200,
+                  formatter:function(value,row,index){
+                      if(row.menu==null){
+                          return "没有父菜单";
+                      }else{
+                          return row.menu.name;
+                      }
+                  }
+              },
+              {
+                  field : 'zindex',
+                  title : '优先级',
+                  width : 200
+              },
+              {
+                  field : 'page',
+                  title : '路径',
+                  width : 200
+              }
+            ]]
+        });
+    });
+
+    function doDblClickRow(rowIndex, rowData) {
+        editIndex = rowIndex;
+        $("#grid").datagrid("beginEdit", rowIndex);
+    }
+
 </script>	
 </head>
 <body class="easyui-layout">

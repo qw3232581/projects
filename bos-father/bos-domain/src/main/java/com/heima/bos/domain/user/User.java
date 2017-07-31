@@ -1,6 +1,7 @@
 package com.heima.bos.domain.user;
 // Generated 2017-7-27 9:50:25 by Hibernate Tools 3.2.2.GA
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.heima.bos.domain.auth.Role;
 import com.heima.bos.domain.qp.NoticeBill;
 
@@ -138,7 +139,8 @@ public class User implements java.io.Serializable {
         this.telephone = telephone;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @JSONField(serialize = false)
     public Set<NoticeBill> getNoticeBills() {
         return this.noticeBills;
     }
@@ -147,10 +149,11 @@ public class User implements java.io.Serializable {
         this.noticeBills = noticeBills;
     }
 
-    @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name="user_role", catalog="bos", joinColumns = {
             @JoinColumn(name="user_id", nullable=false, updatable=false) }, inverseJoinColumns = {
             @JoinColumn(name="role_id", nullable=false, updatable=false) })
+    @JSONField(serialize = false)
     public Set<Role> getRoles() {
         return this.roles;
     }

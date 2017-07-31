@@ -43,8 +43,21 @@ public class FunctionAction extends BaseAction<Function> {
         return "saveFunction";
     }
 
+    @Action(value = "functionAction_updateFunction", results = {
+            @Result(name = "updateFunction",type = "fastJson")})
+    public String updateFunction() {
+        try {
+            facadeService.getFunctionService().saveFunction(model);
+            push(true);
+        } catch (Exception e) {
+            push(false);
+            e.printStackTrace();
+        }
+        return "updateFunction";
+    }
+
     @Action(value = "functionAction_ajaxList", results = {
-            @Result(name = "ajaxList", type = "fastJson")})
+            @Result(name = "ajaxList", type = "fastJson",params = {"includeProperties","id,name"})})
     public String ajaxList() {
         try {
             List<Function> functions =  facadeService.getFunctionService().ajaxList();
@@ -53,6 +66,20 @@ public class FunctionAction extends BaseAction<Function> {
             e.printStackTrace();
         }
         return "ajaxList";
+    }
+
+    @Action(value = "functionAction_findFunctionByRoleId", results = {
+            @Result(name = "findFunctionByRoleId", type = "fastJson",
+                    params = {"includeProperties","id"})})
+    public String findFunctionByRoleId() {
+        try {
+            String roleId = getParameter("roleId");
+            List<Function> functions =  facadeService.getFunctionService().findFunctionByRoleId(roleId);
+            push(functions);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "findFunctionByRoleId";
     }
 
     @Action(value = "functionAction_pageQuery")

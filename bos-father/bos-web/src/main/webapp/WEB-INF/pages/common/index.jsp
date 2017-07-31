@@ -96,7 +96,6 @@
 
             });
         });
-
         function onClick(event, treeId, treeNode, clickFlag) {
             // 判断树菜单节点是否含有 page属性
             if (treeNode.page != undefined && treeNode.page != "") {
