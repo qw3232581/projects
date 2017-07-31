@@ -16,4 +16,8 @@ public interface RoleService {
     List<Role> ajaxList();
 
     void delRole(Role model, String roleIds);
+
+    List<Role> findAll();
+
+    List<Role> findAllRolesByUserId(Integer id);
 }

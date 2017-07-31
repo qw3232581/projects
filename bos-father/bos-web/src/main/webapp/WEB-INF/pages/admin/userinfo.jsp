@@ -18,7 +18,9 @@
 	$(function(){
 		$("body").css({visibility:"visible"});
 		$('#save').click(function(){
-			$('#form').submit();
+		    if ($('#form').form('validate')){
+                $('#form').submit();
+            }
 		});
 		
 	//  角色数据checkbox生成
@@ -28,9 +30,43 @@
 				 $("#grantRoles").append("<input name='roleIds' type='checkbox' value='"+this.id+"'>"+this.name+"</input>&nbsp;&nbsp;");
 			 });
 		 });
-		
 	});
-</script>	
+
+    $.extend($.fn.validatebox.defaults.rules, {
+        telephone: {
+            validator: function (value, param) {
+                var reg = /^1[3|4|5|7|8]\d{9}$/;
+                return reg.test(value);
+            },
+            message: '手机号必须是13,14,15,17,18开头的11位数字'
+        },
+        uniquePhone: {
+            validator: function (value, param) {
+                var flag;
+                $.ajax({
+                    url: '${pageContext.request.contextPath }/userAction_validPhone',
+                    type: 'POST',
+                    timeout: 6000,
+                    data: {"telephone": value},
+                    async: false,
+                    success: function (data, textStatus, jqXHR) {
+                        if (data) {
+                            flag = true;
+                        } else {
+                            flag = false;
+                        }
+                    }
+                });
+                if (flag) {
+                    $("#tel").removeClass('validatebox-invalid');
+                }
+                return flag;
+            },
+            message: '手机号已经存在'
+        }
+    });
+
+</script>
 </head>
 <body class="easyui-layout" style="visibility:hidden;">
 	<div region="north" style="height:31px;overflow:hidden;" split="false" border="false" >
@@ -39,7 +75,7 @@
 		</div>
 	</div>
     <div region="center" style="overflow:auto;padding:5px;" border="false">
-       <form id="form" action="${pageContext.request.contextPath }/userAction_save" method="post" >
+       <form id="form" action="${pageContext.request.contextPath }/userAction_saveUser" method="post" >
            <table class="table-edit"  width="95%" align="center">
            		<tr class="title"><td colspan="4">基本信息</td></tr>
 	           	<tr><td>账号:</td><td>
@@ -68,7 +104,8 @@
 				<tr>
 					<td>联系电话</td>
 					<td colspan="3">
-						<input type="text" name="telephone" id="telephone" class="easyui-validatebox" required="true" />
+						<input type="text" name="telephone" id="telephone" class="easyui-validatebox" required="true"
+                               data-options="validType:['telephone','uniquePhone']"/>
 					</td>
 				</tr>
 				<tr>

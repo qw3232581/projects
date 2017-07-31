@@ -1,6 +1,8 @@
 package com.heima.bos.service.user;
 
 import com.heima.bos.domain.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -23,4 +25,8 @@ public interface UserService {
     void changePasswordWhenLoggedIn(String newPassword, String email);
 
     User findUserByEmail(String username);
+
+    void saveUser(User model, String[] roleIds);
+
+    Page<User> pageQuery(Pageable pageRequest);
 }

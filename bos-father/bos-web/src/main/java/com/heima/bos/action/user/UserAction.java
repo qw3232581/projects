@@ -17,6 +17,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
@@ -37,7 +38,7 @@ public class UserAction extends BaseAction<User> {
 
     //校验验证码
     @Action(value = "userAction_validateCheckcode", results = {
-            @Result(name = "validateCheckcode", type = "json")})
+            @Result(name = "validateCheckcode", type = "fastJson")})
     public String validateCheckcode() {
         String userCheckCode = getParameter("checkcode");
         String sysCheckCode = (String) getSessionAttribute("key");
@@ -47,6 +48,24 @@ public class UserAction extends BaseAction<User> {
             push(false);
         }
         return "validateCheckcode";
+    }
+
+    //手机号唯一性校验
+    @Action(value = "userAction_validPhone", results = {
+            @Result(name = "validPhone", type = "fastJson")})
+    public String validPhone() {
+        String telephone = getParameter("telephone");
+        if (StringUtils.isNotBlank(telephone)) {
+            User user = facadeService.getUserService().findUserByTelephone(telephone);
+            if (user == null){
+                push(true);
+            }else {
+                push(false);
+            }
+        } else {
+            push(false);
+        }
+        return "validPhone";
     }
 
     //用户登录
@@ -92,7 +111,7 @@ public class UserAction extends BaseAction<User> {
 
     //发送手机验证码
     @Action(value = "userAction_sendValidationCode",
-            results = {@Result(name = "sendValidationCode", type = "json")})
+            results = {@Result(name = "sendValidationCode", type = "fastJson")})
     public String sendValidationCode() {
         try {
             final String code = RandStringUtils.getCode();
@@ -117,7 +136,7 @@ public class UserAction extends BaseAction<User> {
 
     //确认手机验证码 0验证码失效 1验证码错误 2手机号错误 3正确
     @Action(value = "userAction_smsPassword",
-            results = {@Result(name = "smsPassword", type = "json")})
+            results = {@Result(name = "smsPassword", type = "fastJson")})
     public String smsPassword() {
         User existUser = facadeService.getUserService().findUserByTelephone(model.getTelephone());
         if (existUser == null) {
@@ -140,7 +159,7 @@ public class UserAction extends BaseAction<User> {
 
     //修改密码
     @Action(value = "userAction_newPassword",
-            results = {@Result(name = "newPassword", type = "json")})
+            results = {@Result(name = "newPassword", type = "fastJson")})
     public String newPassword() {
         String newPassword = this.getParameter("newPassword");
         try {
@@ -167,6 +186,26 @@ public class UserAction extends BaseAction<User> {
 //        }
 
         return "changePasswordWhenLoggedIn";
+    }
+
+    @Action(value = "userAction_saveUser",
+            results = {@Result(name = "saveUser", location = "/WEB-INF/pages/admin/userlist.jsp")})
+    public String saveUser() {
+        try {
+            String[] roleIds = getRequest().getParameterValues("roleIds");
+            facadeService.getUserService().saveUser(model,roleIds);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "saveUser";
+    }
+
+    @Action(value = "userAction_pageQuery")
+    //TODO redis
+    public String pageQuery() {
+        Page<User> pageData = facadeService.getUserService().pageQuery(getPageRequest());
+        setPageDatas(pageData);
+        return "pageQuery";
     }
 
 }

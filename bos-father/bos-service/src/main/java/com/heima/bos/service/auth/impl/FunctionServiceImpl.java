@@ -57,4 +57,9 @@ public class FunctionServiceImpl implements FunctionService {
         }
         return functionList;
     }
+
+    @Override
+    public List<Function> findAll() {
+        return functionDao.findAll();
+    }
 }

@@ -18,4 +18,6 @@ public interface FunctionService {
     List<Function> ajaxList();
 
     List<Function> findFunctionByRoleId(String roleId);
+
+    List<Function> findAll();
 }

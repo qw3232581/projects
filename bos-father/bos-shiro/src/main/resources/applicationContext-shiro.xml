@@ -31,6 +31,9 @@
                 /userAction_validCheckCode** = anon
                 <!--除了上述配置 其他资源必须需要身份认证 (登陆)-->
                 /** = authc
+
+                /page_base_staff**=roles["base"]
+
             </value>
         </property>
     </bean>
