@@ -29,4 +29,6 @@ public interface UserService {
     void saveUser(User model, String[] roleIds);
 
     Page<User> pageQuery(Pageable pageRequest);
+
+    void delUser(User model, String userIds);
 }

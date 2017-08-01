@@ -31,14 +31,16 @@
             };
 
             // 基本功能菜单加载
-            $.post("${pageContext.request.contextPath}/json/menu.json", function (data) {
+            $.post("${pageContext.request.contextPath}/menuAction_findMenuByUserId", function (data) {
                 $.fn.zTree.init($("#treeMenu"), setting, data);
             }, "json");
 
+            <shiro:hasRole name="admin">
             // 系统管理菜单加载
             $.post("${pageContext.request.contextPath}/json/admin.json", function (data) {
                 $.fn.zTree.init($("#adminMenu"), setting, data);
             }, "json");
+            </shiro:hasRole>
 
             // 页面加载后 右下角 弹出窗口
             /**************/
@@ -151,14 +153,11 @@
     </script>
 </head>
 <body class="easyui-layout">
-<div data-options="region:'north',border:false"
-     style="height:80px;padding:10px;background:url('./images/header_bg.png') no-repeat right;">
+<div data-options="region:'north',border:false" style="height:80px;padding:10px;background:url('./images/header_bg.png') no-repeat right;">
     <div>
-        <img src="${pageContext.request.contextPath }/images/logo.png"
-             border="0">
+        <img src="${pageContext.request.contextPath }/images/logo.png" border="0">
     </div>
-    <div id="sessionInfoDiv"
-         style="position: absolute;right: 5px;top:10px;">
+    <div id="sessionInfoDiv" style="position: absolute;right: 5px;top:10px;">
         [<strong><shiro:principal property="email"/></strong>]，欢迎你！您使用[<strong>192.168.1.101</strong>]IP登录！
     </div>
     <div style="position: absolute; right: 5px; bottom: 10px; ">
@@ -181,8 +180,7 @@
         <div onclick="logoutFun();">退出系统</div>
     </div>
 </div>
-<div data-options="region:'west',split:true,title:'菜单导航'"
-     style="width:200px">
+<div data-options="region:'west',split:true,title:'菜单导航'" style="width:200px">
     <div class="easyui-accordion" fit="true" border="false">
         <div title="基本功能" data-options="iconCls:'icon-mini-add'" style="overflow:auto">
             <ul id="treeMenu" class="ztree"></ul>
@@ -194,10 +192,8 @@
 </div>
 <div data-options="region:'center'">
     <div id="tabs" fit="true" class="easyui-tabs" border="false">
-        <div title="消息中心" id="subWarp"
-             style="width:100%;height:100%;overflow:hidden">
-            <iframe src="page_common_home.action"
-                    style="width:100%;height:100%;border:0;"></iframe>
+        <div title="消息中心" id="subWarp" style="width:100%;height:100%;overflow:hidden">
+            <iframe src="page_common_home.action" style="width:100%;height:100%;border:0;"></iframe>
             <%--这里显示公告栏、预警信息和代办事宜--%>
         </div>
     </div>

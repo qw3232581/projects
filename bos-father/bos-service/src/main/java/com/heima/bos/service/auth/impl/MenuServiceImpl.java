@@ -56,4 +56,9 @@ public class MenuServiceImpl implements MenuService {
         }
         return menuList;
     }
+
+    @Override
+    public List<Menu> findMenuByUserId(Integer id) {
+        return menuDao.findMenuByUserId(id);
+    }
 }

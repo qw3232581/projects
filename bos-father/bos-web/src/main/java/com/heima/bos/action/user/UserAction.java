@@ -208,4 +208,20 @@ public class UserAction extends BaseAction<User> {
         return "pageQuery";
     }
 
+    //删除用户
+    @Action(value = "userAction_delUser", results = {
+            @Result(name = "delUser", location = "/WEB-INF/pages/admin/userlist.jsp")})
+    public String delUser() {
+        try {
+            String userIds = getParameter("userIds");
+
+            facadeService.getUserService().delUser(model,userIds);
+            push(true);
+        } catch (Exception e) {
+            push(false);
+            e.printStackTrace();
+        }
+        return "delUser";
+    }
+
 }

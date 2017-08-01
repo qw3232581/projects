@@ -4,6 +4,7 @@ import com.heima.bos.dao.user.UserDao;
 import com.heima.bos.domain.auth.Role;
 import com.heima.bos.domain.user.User;
 import com.heima.bos.service.user.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -83,6 +84,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> pageQuery(Pageable pageRequest) {
         return userDao.findAll(pageRequest);
+    }
+
+    @Override
+    public void delUser(User model, String userIds) {
+        if (StringUtils.isNotBlank(userIds)){
+            String[] userids = userIds.split(",");
+            for (String uid : userids) {
+                User user = userDao.getOne(Integer.valueOf(uid));
+                user.getRoles().clear();
+                user.getNoticeBills().clear();
+                userDao.delete(Integer.valueOf(uid));
+            }
+        }
     }
 
 }

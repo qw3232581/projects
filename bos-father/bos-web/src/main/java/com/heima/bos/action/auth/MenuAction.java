@@ -3,7 +3,10 @@ package com.heima.bos.action.auth;
 import com.heima.bos.base.BaseAction;
 import com.heima.bos.domain.auth.Function;
 import com.heima.bos.domain.auth.Menu;
+import com.heima.bos.domain.user.User;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -64,6 +67,17 @@ public class MenuAction extends BaseAction<Menu> {
             e.printStackTrace();
         }
         return "findMenuByRoleId";
+    }
+
+    @Action(value = "menuAction_findMenuByUserId", results = {
+            @Result(name = "findMenuByUserId", type = "fastJson")})
+    public String menuAction_findMenuByUserId() {
+
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        List<Menu> menus = facadeService.getMenuService().findMenuByUserId(user.getId());
+        push(menus);
+        return "findMenuByUserId";
     }
 
     @Action(value = "menuAction_pageQuery")

@@ -187,7 +187,7 @@ function doDelete() {
     if (arr == null || arr.length == 0) {
         $.messager.alert("提示", "请至少选中一行进行操作", "info")
     } else {
-        var ids = new Array();
+        var ids = [];
         for (var i = 0; i < arr.length; i++) {
             ids.push(arr[i].id);
         }

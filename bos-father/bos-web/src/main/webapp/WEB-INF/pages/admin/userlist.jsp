@@ -122,17 +122,27 @@
 	}
 
 	function doDelete() {
-		alert("删除用户");
-		var ids = [];
-		var items = $('#grid').datagrid('getSelections');
-		for(var i=0; i<items.length; i++){
-		    ids.push(items[i].id);	    
-		}
-			
-		console.info(ids.join(","));
-		
-		$('#grid').datagrid('reload');
-		$('#grid').datagrid('uncheckAll');
+        var arr = $("#grid").datagrid("getSelections");
+        if (arr == null || arr.length == 0) {
+            $.messager.alert("提示", "请至少选中一行进行操作", "info")
+        } else {
+            var ids = [];
+            for (var i = 0; i < arr.length; i++) {
+                ids.push(arr[i].id);
+            }
+            var idsString = ids.join(",");
+            $.post("${pageContext.request.contextPath}/userAction_delUser",
+                {"userIds": idsString},
+                function (data) {
+                    if (data) {
+                        $.messager.alert("提示", "操作成功", "info")
+                        $("#grid").datagrid("clearChecked");
+                        $("#grid").datagrid("reload");
+                    } else {
+                        $.messager.alert("提示", "操作失败", "info")
+                    }
+                })
+        }
 	}
 	
 </script>		
