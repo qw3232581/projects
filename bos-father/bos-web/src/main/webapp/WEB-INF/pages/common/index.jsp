@@ -3,154 +3,151 @@
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>宅急送BOS主界面</title>
-    <!-- 导入jquery核心类库 -->
-    <script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.3.js"></script>
-    <!-- 导入easyui类库 -->
-    <link id="easyuiTheme" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/themes/default/easyui.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/css/default.css">
-    <script type="text/javascript" src="${pageContext.request.contextPath }/js/easyui/jquery.easyui.min.js"></script>
-    <!-- 导入ztree类库 -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath }/js/ztree/zTreeStyle.css" type="text/css"/>
-    <script src="${pageContext.request.contextPath }/js/ztree/jquery.ztree.all-3.5.js" type="text/javascript"></script>
-    <script src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js"  type="text/javascript"></script>
-    <script type="text/javascript">
-        // 初始化ztree菜单
-        $(function () {
-            var setting = {
-                data: {
-                    simpleData: { // 简单数据
-                        enable: true
-                    }
-                },
-                callback: {
-                    onClick: onClick
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>宅急送BOS主界面</title>
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery-1.8.3.js"></script>
+<link id="easyuiTheme" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/js/easyui/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/css/default.css">
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/easyui/jquery.easyui.min.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/js/ztree/zTreeStyle.css" type="text/css"/>
+<script src="${pageContext.request.contextPath }/js/ztree/jquery.ztree.all-3.5.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js"  type="text/javascript"></script>
+<script type="text/javascript">
+    // 初始化ztree菜单
+    $(function () {
+        var setting = {
+            data: {
+                simpleData: { // 简单数据
+                    enable: true
                 }
-            };
-
-            // 基本功能菜单加载
-            $.post("${pageContext.request.contextPath}/menuAction_findMenuByUserId", function (data) {
-                $.fn.zTree.init($("#treeMenu"), setting, data);
-            }, "json");
-
-            <shiro:hasRole name="admin">
-            // 系统管理菜单加载
-            $.post("${pageContext.request.contextPath}/json/admin.json", function (data) {
-                $.fn.zTree.init($("#adminMenu"), setting, data);
-            }, "json");
-            </shiro:hasRole>
-
-            // 页面加载后 右下角 弹出窗口
-            /**************/
-            window.setTimeout(function () {
-                $.messager.show({
-                    title: "消息提示",
-                    msg: '欢迎登录！ <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
-                    timeout: 5000
-                });
-            }, 3000);
-            /*************/
-
-            $("#btnCancel").click(function () {
-                $('#editPwdWindow').window('close');
-            });
-
-            $("#btnEp").click(function () {
-
-                //  修改密码   txtNewPass    txtRePass
-                // 1: 判断 新密码 不能有空白字符   选择 正则表达式  \s
-                var reg = /\s+/;
-                var reg1 = /^[0-9]{6}$/;
-                var newPasswordValue = $("#txtNewPass").val();
-                if (reg.test(newPasswordValue)) {
-                    //  找到空白字段  非法  不能发送请求给后台
-                    $.messager.alert("警告!", "密码输入非法,请重新输入!", "warning");
-                    return;
-                }
-                if (newPasswordValue == "") {
-                    //  找到空白字段  非法  不能发送请求给后台
-                    $.messager.alert("警告!", "必须输入密码!", "warning");
-                    return;
-                }
-                if (!reg1.test(newPasswordValue)) {
-                    //  找到空白字段  非法  不能发送请求给后台
-                    $.messager.alert("警告!", "密码必须6位纯数字!", "warning");
-                    return;
-                }
-                if ($("#txtNewPass").val() != $("#txtRePass").val()) {
-                    //  找到空白字段  非法  不能发送请求给后台
-                    $.messager.alert("错误!", "密码不一致!", "error");
-                    return;
-                }
-
-                $.post("${pageContext.request.contextPath}/userAction_changePasswordWhenLoggedIn",
-                    {"newPassword": $("#txtNewPass").val()}
-                    , function (data) {
-                        if (data) {
-                            $.messager.alert("恭喜!", "密码修改,请重新登录!", "info");
-                            location.href = "${pageContext.request.contextPath}/login.jsp";
-                        } else {
-                            $.messager.alert("可惜!", "密码修改失败,请联系管理员", "error");
-                        }
-                    });
-
-            });
-        });
-        function onClick(event, treeId, treeNode, clickFlag) {
-            // 判断树菜单节点是否含有 page属性
-            if (treeNode.page != undefined && treeNode.page != "") {
-                if ($("#tabs").tabs('exists', treeNode.name)) {// 判断tab是否存在
-                    $('#tabs').tabs('select', treeNode.name); // 切换tab
-                } else {
-                    // 开启一个新的tab页面
-                    var content = '<div style="width:100%;height:100%;overflow:hidden;">'
-                        + '<iframe src="'
-                        + treeNode.page
-                        + '" scrolling="auto" style="width:100%;height:100%;border:0;" ></iframe></div>';
-
-                    $('#tabs').tabs('add', {
-                        title: treeNode.name,
-                        content: content,
-                        closable: true
-                    });
-                }
-            }
-        }
-
-        /*******顶部 *******/
-        changeTheme = function (themeName) {
-            var $easyuiTheme = $('#easyuiTheme');
-            var url = $easyuiTheme.attr('href');
-            var href = url.substring(0, url.indexOf('themes')) + 'themes/'+ themeName + '/easyui.css';
-            $easyuiTheme.attr('href', href);
-            var $iframe = $('iframe');
-            if ($iframe.length > 0) {
-                for (var i = 0; i < $iframe.length; i++) {
-                    var ifr = $iframe[i];
-                    $(ifr).contents().find('#easyuiTheme').attr('href', href);
-                }
+            },
+            callback: {
+                onClick: onClick
             }
         };
-        // 退出登录
-        function logoutFun() {
-            $.messager
-                .confirm('系统提示', '您确定要退出本次登录吗?', function (isConfirm) {
-                    if (isConfirm) {
-                        location.href = '${pageContext.request.contextPath }/userAction_logout';
+
+        // 基本功能菜单加载
+        $.post("${pageContext.request.contextPath}/menuAction_findMenuByUserId", function (data) {
+            $.fn.zTree.init($("#treeMenu"), setting, data);
+        }, "json");
+
+        <shiro:hasRole name="admin">
+        // 系统管理菜单加载
+        $.post("${pageContext.request.contextPath}/json/admin.json", function (data) {
+            $.fn.zTree.init($("#adminMenu"), setting, data);
+        }, "json");
+        </shiro:hasRole>
+
+        // 页面加载后 右下角 弹出窗口
+        /**************/
+        window.setTimeout(function () {
+            $.messager.show({
+                title: "消息提示",
+                msg: '欢迎登录！ <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
+                timeout: 5000
+            });
+        }, 3000);
+        /*************/
+
+        $("#btnCancel").click(function () {
+            $('#editPwdWindow').window('close');
+        });
+
+        $("#btnEp").click(function () {
+
+            //  修改密码   txtNewPass    txtRePass
+            // 1: 判断 新密码 不能有空白字符   选择 正则表达式  \s
+            var reg = /\s+/;
+            var reg1 = /^[0-9]{6}$/;
+            var newPasswordValue = $("#txtNewPass").val();
+            if (reg.test(newPasswordValue)) {
+                //  找到空白字段  非法  不能发送请求给后台
+                $.messager.alert("警告!", "密码输入非法,请重新输入!", "warning");
+                return;
+            }
+            if (newPasswordValue == "") {
+                //  找到空白字段  非法  不能发送请求给后台
+                $.messager.alert("警告!", "必须输入密码!", "warning");
+                return;
+            }
+            if (!reg1.test(newPasswordValue)) {
+                //  找到空白字段  非法  不能发送请求给后台
+                $.messager.alert("警告!", "密码必须6位纯数字!", "warning");
+                return;
+            }
+            if ($("#txtNewPass").val() != $("#txtRePass").val()) {
+                //  找到空白字段  非法  不能发送请求给后台
+                $.messager.alert("错误!", "密码不一致!", "error");
+                return;
+            }
+
+            $.post("${pageContext.request.contextPath}/userAction_changePasswordWhenLoggedIn",
+                {"newPassword": $("#txtNewPass").val()}
+                , function (data) {
+                    if (data) {
+                        $.messager.alert("恭喜!", "密码修改,请重新登录!", "info");
+                        location.href = "${pageContext.request.contextPath}/login.jsp";
+                    } else {
+                        $.messager.alert("可惜!", "密码修改失败,请联系管理员", "error");
                     }
                 });
+
+        });
+    });
+    function onClick(event, treeId, treeNode, clickFlag) {
+        // 判断树菜单节点是否含有 page属性
+        if (treeNode.page != undefined && treeNode.page != "") {
+            if ($("#tabs").tabs('exists', treeNode.name)) {// 判断tab是否存在
+                $('#tabs').tabs('select', treeNode.name); // 切换tab
+            } else {
+                // 开启一个新的tab页面
+                var content = '<div style="width:100%;height:100%;overflow:hidden;">'
+                    + '<iframe src="'
+                    + treeNode.page
+                    + '" scrolling="auto" style="width:100%;height:100%;border:0;" ></iframe></div>';
+
+                $('#tabs').tabs('add', {
+                    title: treeNode.name,
+                    content: content,
+                    closable: true
+                });
+            }
         }
-        // 修改密码
-        function editPassword() {
-            $('#editPwdWindow').window('open');
+    }
+
+    /*******顶部 *******/
+    changeTheme = function (themeName) {
+        var $easyuiTheme = $('#easyuiTheme');
+        var url = $easyuiTheme.attr('href');
+        var href = url.substring(0, url.indexOf('themes')) + 'themes/'+ themeName + '/easyui.css';
+        $easyuiTheme.attr('href', href);
+        var $iframe = $('iframe');
+        if ($iframe.length > 0) {
+            for (var i = 0; i < $iframe.length; i++) {
+                var ifr = $iframe[i];
+                $(ifr).contents().find('#easyuiTheme').attr('href', href);
+            }
         }
-        // 版权信息
-        function showAbout() {
-            $.messager.alert("宅急送 v1.0", "Jamayette");
-        }
-    </script>
+    };
+    // 退出登录
+    function logoutFun() {
+        $.messager
+            .confirm('系统提示', '您确定要退出本次登录吗?', function (isConfirm) {
+                if (isConfirm) {
+                    location.href = '${pageContext.request.contextPath }/userAction_logout';
+                }
+            });
+    }
+    // 修改密码
+    function editPassword() {
+        $('#editPwdWindow').window('open');
+    }
+    // 版权信息
+    function showAbout() {
+        $.messager.alert("宅急送 v1.0", "Jamayette");
+    }
+</script>
 </head>
 <body class="easyui-layout">
 <div data-options="region:'north',border:false" style="height:80px;padding:10px;background:url('./images/header_bg.png') no-repeat right;">

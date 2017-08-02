@@ -5,6 +5,7 @@ import com.heima.bos.service.auth.FunctionService;
 import com.heima.bos.service.auth.MenuService;
 import com.heima.bos.service.auth.RoleService;
 import com.heima.bos.service.qp.NoticeBillService;
+import com.heima.bos.service.qp.WorkOrderManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,8 @@ public class FacadeService {
     private MenuService menuService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private WorkOrderManageService workOrderManageService;
 
     public UserService getUserService() {
         return userService;
@@ -77,5 +80,7 @@ public class FacadeService {
     public MenuService getMenuService() {return menuService;}
 
     public RoleService getRoleService() {return roleService;}
+
+    public WorkOrderManageService getWorkOrderManageService() {return workOrderManageService;}
 
 }

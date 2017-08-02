@@ -52,6 +52,7 @@ public class FunctionServiceImpl implements FunctionService {
         Role role = roleDao.findOne(roleId);
         Set<Function> functions = role.getFunctions();
         List<Function> functionList = new ArrayList<>();
+        
         for (Function function : functions) {
             functionList.add(function);
         }
