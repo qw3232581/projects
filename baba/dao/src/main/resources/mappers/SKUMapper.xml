@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baba.dao.SKUDAO">
+
+    <resultMap type="Sku" id="skuColorResultMap" autoMapping="true">
+        <id column="id" property="id"/>
+        <association property="color" javaType="Color" autoMapping="true">
+            <id column="color_id" property="id"/>
+        </association>
+    </resultMap>
+    <select id="selectSkuByProductID" resultMap="skuColorResultMap">
+        SELECT
+          *
+        FROM
+          bbs_sku s
+        LEFT JOIN bbs_color c ON s.color_id = c.id
+        WHERE
+          product_id = #{product_id};
+    </select>
+
+    <select id="selectSkuAndColorByProductId" resultType="SuperPojo">
+        SELECT
+            *
+        FROM
+            bbs_sku s,
+            bbs_color c
+        WHERE
+          s.color_id =c.id
+        AND
+          s.product_id = #{productId}
+    </select>
+
+
+    <select id="findSkuAndProductBySkuId" resultType="SuperPojo">
+        SELECT
+            *,
+            s.id AS skuId,
+            c.`name` AS colorName,
+            p.`name` AS productName,
+            p.img_url AS imgUrl,
+            s.price AS skuPrice
+        FROM
+            bbs_sku s,
+            bbs_color c,
+            bbs_product p
+        WHERE
+            s.color_id = c.id
+        AND s.product_id = p.id
+        AND s.id = #{skuId}
+    </select>
+
+
+
+</mapper>
