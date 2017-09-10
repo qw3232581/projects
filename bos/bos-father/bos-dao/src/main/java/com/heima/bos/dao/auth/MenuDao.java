@@ -18,4 +18,5 @@ public interface MenuDao extends JpaRepository<Menu, String>, JpaSpecificationEx
 
     @Query("from Menu m inner join fetch m.roles r inner join fetch r.users u where u.id = ?1 order by m.zindex desc")
     List<Menu> findMenuByUserId(Integer id);
+    
 }
